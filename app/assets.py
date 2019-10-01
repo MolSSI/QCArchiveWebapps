@@ -6,11 +6,11 @@ def compile_assets(app):
     assets = Environment(app)
     Environment.auto_build = True
     Environment.debug = False
-    less_bundle = Bundle('less/*.less',
+    less_bundle = Bundle('src/less/*.less',
                          filters='less,cssmin',
                          output='dist/css/styles.css',
                          extra={'rel': 'stylesheet/less'})
-    js_bundle = Bundle('js/*.js',
+    js_bundle = Bundle('src/js/*.js',
                        filters='jsmin',
                        output='dist/js/main.min.js')
     assets.register('less_all', less_bundle)
