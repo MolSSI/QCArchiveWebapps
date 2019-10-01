@@ -13,7 +13,12 @@ Flask-Moment
 Flask-PageDown
 Flask-SQLAlchemy
 Flask-WTF
+Flask_Assets
 html5lib
+cssmin
+lesscpy
+#libsass
+jsmin
 itsdangerous
 Jinja2
 Mako
@@ -28,3 +33,5 @@ visitor
 webencodings
 Werkzeug
 WTForms
+dash
+pandas
