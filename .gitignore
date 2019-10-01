@@ -47,3 +47,6 @@ venv
 
 #Pycharm
 .idea/
+
+# Front-end
+.webassets-cache/
