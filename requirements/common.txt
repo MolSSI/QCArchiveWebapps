@@ -17,6 +17,7 @@ Flask_Assets
 html5lib
 cssmin
 lesscpy
+pyScss
 #libsass
 jsmin
 itsdangerous
