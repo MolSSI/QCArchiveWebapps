@@ -44,9 +44,7 @@ def create_app(config_name):
         from .api import api as api_blueprint
         app.register_blueprint(api_blueprint, url_prefix='/api/v1')
 
-        # Import Dash application
-        from .dash_apps.dash_example import dash_example
-        app = dash_example.Add_Dash(app, '/dash_example/')
+        register_dashapps(flask_server=app)
 
         # Compile assets
         from .assets import compile_assets
@@ -55,3 +53,16 @@ def create_app(config_name):
         return app
 
     return app
+
+
+def register_dashapps(flask_server):
+    """Register dash apps using the flask server"""
+     # Import Dash application
+
+    from .dash_apps.dash_example import index as dash_example_index
+    flask_server = dash_example_index.Add_Dash(flask_server, '/dash_example/')
+
+    from .dash_apps.reaction_viewer import index as reaction_viewer_index
+    flask_server = reaction_viewer_index.Add_Dash(flask_server, '/reaction_viewer/')
+
+    return flask_server

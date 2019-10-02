@@ -36,3 +36,4 @@ Werkzeug
 WTForms
 dash
 pandas
+qcportal==0.11.*
