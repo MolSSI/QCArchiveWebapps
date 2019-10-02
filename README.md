@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/MolSSI/QCArchive_website.svg?token=66tFeohM6UiDzZMw65q9&branch=master)](https://travis-ci.com/MolSSI/QCArchive_website)
+[![codecov](https://codecov.io/gh/MolSSI/QCArchive_website/branch/master/graph/badge.svg?token=xPgDkNsfxk)](https://codecov.io/gh/MolSSI/QCArchive_website)
+
 QCArchive Website
 =================
 
@@ -10,16 +13,13 @@ Run in shell:
 
 ```
 conda create -n qca_web pip
-pip install -r requirements/dev.txt
 conda activate qca_web
+pip install -r requirements/dev.txt
+sudo npm install -g less
 ```
 
-Create the environment-specific `.flaskenv` file, with key values that will be exported to the environment (dev, prod, etc). Use `.env` for private variables.
+Add environment-specific attributes to `.flaskenv` file, with key values that will be exported to the environment (dev, prod, etc). Use `.env` file for private variables.
 
-```
-FLASK_APP=qcarchive_web.py
-# any other customizations
-```
 
 Create the migrations folder if doesn't exists by: (usually not needed)
 ```

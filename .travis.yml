@@ -2,7 +2,7 @@
 #   http://lint.travis-ci.org/
 
 language: python
-sudo: false
+sudo: true
 dist: xenial
 
 matrix:
@@ -19,6 +19,8 @@ before_install:
   - ulimit -a
 
 install:
+  - sudo apt-get install npm
+  - sudo npm install -g less
   - pip install -r requirements/travis.txt
 
 before_script:
@@ -30,4 +32,4 @@ notifications:
   email: false
 
 after_success:
-#  - codecov
+  - codecov
