@@ -1,35 +1,33 @@
 """Create a Dash app within a Flask app."""
 from pathlib import Path
-from dash import Dash
 import dash_table
 import dash_html_components as html
 import pandas as pd
-from .layout import html_layout
+from ..dash_base import DashAppBase
 
 
-def Add_Dash(server, path):
+class DashExampleApp(DashAppBase):
     """Create a Dash app."""
 
-    external_stylesheets = ['/static/dist/css/styles.css',
-                            'https://fonts.googleapis.com/css?family=Lato',
-                            'https://use.fontawesome.com/releases/v5.8.1/css/all.css']
-    external_scripts = ['/static/dist/js/includes/jquery.min.js',
-                        '/static/dist/js/main.min.js']
-    dash_app = Dash(server=server,
-                    external_stylesheets=external_stylesheets,
-                    external_scripts=external_scripts,
-                    routes_pathname_prefix=path)
+    def __init__(self, server, path, **kwargs):
+        # override default
+        external_stylesheets = ['/static/dist/css/styles.css',
+                                'https://fonts.googleapis.com/css?family=Lato',
+                                'https://use.fontawesome.com/releases/v5.8.1/css/all.css']
+        external_scripts = ['/static/dist/js/includes/jquery.min.js',
+                            '/static/dist/js/main.min.js']
+        super().__init__(server, path,
+                         external_stylesheets=external_stylesheets,
+                         external_scripts=external_scripts)
 
-    # Override the underlying HTML template
-    dash_app.index_string = html_layout
-
-    # Create Dash Layout comprised of Data Tables
-    dash_app.layout = html.Div(
+    def get_layout(self, dashapp):
+        return html.Div(
         children=get_datasets(),
         id='dash-container'
       )
 
-    return dash_app.server
+    def register_callbacks(self, dashapp):
+        return
 
 def get_datasets():
     """Return previews of all CSVs saved in /data directory."""

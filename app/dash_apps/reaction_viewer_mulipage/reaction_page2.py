@@ -18,7 +18,8 @@ layout = html.Div([
 ])
 
 
-def register_callbacks(dashapp):
+def callbacks(dashapp):
+
     @dashapp.callback(
         Output('app-2-display-value', 'children'),
         [Input('app-2-dropdown', 'value')])

@@ -59,10 +59,17 @@ def register_dashapps(flask_server):
     """Register dash apps using the flask server"""
      # Import Dash application
 
-    from .dash_apps.dash_example import index as dash_example_index
-    flask_server = dash_example_index.Add_Dash(flask_server, '/dash_example/')
+    from .dash_apps.dash_example.index import DashExampleApp
+    DashExampleApp(flask_server, '/dash_example/')
 
-    from .dash_apps.reaction_viewer import index as reaction_viewer_index
-    flask_server = reaction_viewer_index.Add_Dash(flask_server, '/reaction_viewer/')
+    from .dash_apps.reaction_viewer.index import ReactionViewerApp
+    ReactionViewerApp(flask_server, '/reaction_viewer/')
+
+    from .dash_apps.reaction_viewer_mulipage.index import ReactionViewerAppMuli
+    ReactionViewerAppMuli(flask_server, '/reaction_multi/')
+
+    from .dash_apps.test_app.index import TestViewerApp
+    TestViewerApp(flask_server, '/test/')
+
 
     return flask_server

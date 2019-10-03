@@ -4,8 +4,6 @@ from dash.dependencies import Input, Output
 
 from .connection import get_client
 
-## Functions to call on the fly when page loads
-
 
 def list_collections():
     client = get_client()
@@ -27,7 +25,7 @@ def get_history_values(name, category):
         return [{"label": k, "value": k} for k in methods]
 
 
-layout = lambda: html.Div(
+layout = html.Div(
     [
 
         # Header
@@ -117,7 +115,8 @@ layout = lambda: html.Div(
     ],
     className='container')
 
-def register_callbacks(dashapp):
+def callbacks(dashapp):
+
     @dashapp.callback([
         Output('rds-display-value', 'children'),
         Output('rds-available-methods', 'options'),
