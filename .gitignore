@@ -51,3 +51,5 @@ venv
 
 # Front-end
 .webassets-cache/
+
+node_modules/

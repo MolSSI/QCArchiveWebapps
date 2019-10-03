@@ -1,0 +1,25 @@
+{
+  "name": "qcarchive_website",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.com/MolSSI/QCArchive_website.svg?token=66tFeohM6UiDzZMw65q9&branch=master)](https://travis-ci.com/MolSSI/QCArchive_website) [![codecov](https://codecov.io/gh/MolSSI/QCArchive_website/branch/master/graph/badge.svg?token=xPgDkNsfxk)](https://codecov.io/gh/MolSSI/QCArchive_website)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MolSSI/QCArchive_website.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MolSSI/QCArchive_website/issues"
+  },
+  "homepage": "https://github.com/MolSSI/QCArchive_website#readme",
+  "dependencies": {
+    "less": "^3.10.3"
+  }
+}
