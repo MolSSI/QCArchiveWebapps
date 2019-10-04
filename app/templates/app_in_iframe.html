@@ -6,11 +6,9 @@
 
 {% block page_content %}
 
-    <ul>
-    {% for app in apps %}
-      <li><a href="{{ app.link }}">{{ app.name }}</a></li>
-    {% endfor %}
-    </ul>
+    <div>
+        <iframe src="/reaction_viewer/" width="100%" height="2000px" frameborder="0"></iframe>
+    </div>
 
 {% endblock %}
 

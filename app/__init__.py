@@ -35,18 +35,26 @@ def create_app(config_name):
 
     with app.app_context():
 
+        # The main application entry
         from .main import main as main_blueprint
         app.register_blueprint(main_blueprint)
 
+        # examples to use for auth, forms, etc
+        from .examples import examples as examples_blueprint
+        app.register_blueprint(examples_blueprint, url_prefix='/examples')
+
+        # For authentication
         from .auth import auth as auth_blueprint
         app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
+        # API if needed
         from .api import api as api_blueprint
         app.register_blueprint(api_blueprint, url_prefix='/api/v1')
 
+        # Register dash apps
         register_dashapps(flask_server=app)
 
-        # Compile assets
+        # Compile assets (JS, SCSS, less)
         from .assets import compile_assets
         compile_assets(app)
 
@@ -56,8 +64,10 @@ def create_app(config_name):
 
 
 def register_dashapps(flask_server):
-    """Register dash apps using the flask server"""
-     # Import Dash application
+    """Register dash apps using the flask server
+
+        Add any new apps here
+    """
 
     from .dash_apps.dash_example.index import DashExampleApp
     DashExampleApp(flask_server, '/dash_example/')

@@ -1,4 +1,3 @@
-from dash import Dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -28,7 +27,11 @@ class ReactionViewerAppMuli(DashAppBase):
             elif pathname == base + 'app2':
                 return reaction_page2.layout
             else:
-                return html.Div([dcc.Link('Reaction Viewer (link to same dash app)', href=base+'app1')])
+                return html.Div([
+                    dcc.Link('Link to page 1 (same app)', href=base+'app1'),
+                    html.Br(),
+                    dcc.Link('Link to page 2 (same app)', href=base+'app2')
+                ])
 
         # Must register callbacks
         reaction_page2.callbacks(dashapp)
