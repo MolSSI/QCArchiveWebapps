@@ -6,34 +6,52 @@ QCArchive Website
 
 A full featured flask website, built with Flask, SQLAlchemy, Alembic, and Dash
 
-How to run
-===========
+How to run and use for development:
+===================================
 
-Run in shell:
+Run in shell, create python env, and install requirements:
 
-```
+```bash
 conda create -n qca_web pip
 conda activate qca_web
 pip install -r requirements/dev.txt
-sudo npm install -g less
 ```
+
+Next, install Node (front-end),and the install requirements, 
+which will be fetched from package.json automatically:
+
+```bash
+sudo apt-get install nodejs
+npm install
+
+```
+
+Note that whenever you add a new JS library, you must add it to the node requirments
+by using `npm install mypackage --save`.
 
 Add environment-specific attributes to `.flaskenv` file, with key values that will be exported to the environment (dev, prod, etc). Use `.env` file for private variables.
 
 
-Create the migrations folder if doesn't exists by: (usually not needed)
-```
+The migrations folder was created initially by the following command 
+(you shouldn't create it again):
+
+```bash
 flask db init
 ```
 
-Later, you can use migration commands, like `flask db migrate` to creare migrations.
+Now, you can use migration commands, like `flask db migrate` to creare migrations.
  
-Now, use upgrade command to create the DB if it doesn't exist and upgrade it if it exists:
-```
+To run the website, use upgrade command to create the DB if it doesn't exist and 
+upgrade it:
+
+```bash
 flask db upgrade
+# or even better (as more deployment commands added):
+flask deploy
 ```
 
-To run the app, use: 
-```
+To run the website locally, use: 
+
+```bash
 flask run
 ```
