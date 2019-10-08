@@ -34,24 +34,8 @@ class ReactionViewerApp(DashAppBase):
         # Header
         html.Div(
             [
-                html.Img(src="https://qcarchive.molssi.org/images/QCArchiveLogo.png",
-                         style={
-                             'height': '150px',
-                             'float': 'right',
-                             'position': 'relative',
-                             'bottom': '40px',
-                             'left': '50px'
-                         }),
                 html.H3('Reaction Dataset Viewer',
-                        style={
-                            'position': 'relative',
-                            'top': '0px',
-                            'left': '10px',
-                            'font-family': 'Dosis',
-                            'display': 'inline',
-                            'font-size': '6.0rem',
-                            'color': '#4D637F'
-                        }),
+                         className='app-title'),
             ],
             # className='row twelve columns',
             style={

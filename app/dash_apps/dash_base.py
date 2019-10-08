@@ -30,6 +30,7 @@ class DashAppBase(ABC):
                        url_base_pathname=path,  # will set both routes and requests pathname_prefix
                        external_stylesheets=external_stylesheets,
                        external_scripts=external_scripts,
+                       assets_folder='static/dist',
                        # routes_pathname_prefix=path,
                        # requests_pathname_prefix=path,  # for middleware dispatcher
                        suppress_callback_exceptions=True,
