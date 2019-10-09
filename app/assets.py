@@ -31,6 +31,6 @@ def compile_assets(app):
     assets.register('js_all', js_bundle)
 
     # if app.env == 'development':
-    less_bundle.build(force=True)
+    # less_bundle.build(force=True)
     scss_bundle.build(force=True)
     js_bundle.build()
