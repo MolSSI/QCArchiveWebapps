@@ -4,6 +4,10 @@
 
 {% block title %}QCArchive{% endblock %}
 
+{% block navbar %}
+     {% include 'partials/navbar.html' %}
+{% endblock -%}
+
 {% block page_content %}
 
     <ul>
@@ -13,6 +17,10 @@
     </ul>
 
 {% endblock %}
+
+{%- block footer %}
+    {% include 'partials/footer.html' %}
+{% endblock -%}
 
 {% block scripts %}
 {{ super() }}

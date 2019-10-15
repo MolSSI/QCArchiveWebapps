@@ -46,3 +46,13 @@ def app_in_iframe():
 #     resp = make_response(redirect(url_for('.index')))
 #     resp.set_cookie('show_followed', '', max_age=30*24*60*60)
 #     return resp
+
+@main.route('/ml_datasets')
+def ml_datasets():
+    apps = [
+        {'name': 'Reaction Viewer', 'link': '/reaction_viewer/'},
+        {'name': 'App inside an iFrame', 'link': '/app_in_iframe/'},
+        {'name': 'Example Dash with different style', 'link': '/dash_example/'},
+        {'name': 'App with multiple pages', 'link': '/reaction_multi/'},
+    ]
+    return render_template('ML_datasets.html', apps=apps)
