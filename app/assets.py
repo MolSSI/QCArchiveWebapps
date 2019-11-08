@@ -7,10 +7,10 @@ def compile_assets(app):
     Environment.auto_build = True
     Environment.debug = False
 
-    less_bundle = Bundle('src/less/*.less',
-                         filters='less,cssmin',
-                         output='dist/css/styles.css',
-                         extra={'rel': 'stylesheet/less' if app.debug else 'stylesheet'})
+    # less_bundle = Bundle('src/less/*.less',
+    #                      filters='less,cssmin',
+    #                      output='dist/css/styles.css',
+    #                      extra={'rel': 'stylesheet/less' if app.debug else 'stylesheet'})
 
     scss_bundle = Bundle('src/scss/hugo/style.scss', 'src/scss/hugo/dashapps.scss',
                          depends='**/*.scss',
@@ -28,10 +28,8 @@ def compile_assets(app):
 
     # to run less files directly from the browser
     app.config['LESS_RUN_IN_DEBUG'] = True  # True by default
-    # if app.debug:
-    #     js_bundle.contents += 'http://lesscss.googlecode.com/files/less-1.3.0.min.js'
 
-    assets.register('less_all', less_bundle)
+    # assets.register('less_all', less_bundle)
     assets.register('scss_all', scss_bundle)
     assets.register('ml_datasets_css', ml_datasets_css)
     assets.register('js_all', js_bundle)

@@ -20,7 +20,7 @@ before_install:
 
 install:
   - sudo apt-get install npm
-  - sudo npm install -g less
+  - sudo npm install
   - pip install -r requirements/travis.txt
 
 before_script:
