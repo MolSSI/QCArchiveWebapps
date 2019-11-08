@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.com/MolSSI/QCArchive_website.svg?token=66tFeohM6UiDzZMw65q9&branch=master)](https://travis-ci.com/MolSSI/QCArchive_website)
 [![codecov](https://codecov.io/gh/MolSSI/QCArchive_website/branch/master/graph/badge.svg?token=xPgDkNsfxk)](https://codecov.io/gh/MolSSI/QCArchive_website)
 
-QCArchive Website
-=================
+QCArchive Website Webapps
+========================
 
 A full featured flask website, built with Flask, SQLAlchemy, Alembic, and Dash
 
@@ -22,12 +22,12 @@ which will be fetched from package.json automatically:
 
 ```bash
 sudo apt-get install nodejs
+cd QCArchive_webapps/app/static
 npm install
-
 ```
 
 Note that whenever you add a new JS library, you must add it to the node requirments
-by using `npm install mypackage --save`.
+by using `npm install mypackage --save` in the `app/static/` folder.
 
 Add environment-specific attributes to `.flaskenv` file, with key values that will be exported to the environment (dev, prod, etc). Use `.env` file for private variables.
 
