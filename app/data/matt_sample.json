@@ -1,0 +1,41 @@
+{
+    "name": "COMP6 ANI-MD",
+    "tags": [
+      "machine learning",
+      "COMP6",
+      "molecular dynamics",
+      "md",
+      "drug",
+      "peptide",
+      "organic"
+    ],
+    "tagline": "Benchmark containing MD trajectories from the ANI-1x potential.",
+    "description": "A member of the COMP6 benchmark set, this dataset contains MD trajectories generated using the ANI-1x potential at 300K for 14 drug molecules and two peptides. Each trajectory is 128 frames subsampled from 1 ns of dynamics. Reference calculations are perfomed at the \\u03c9B97x/6-31g* level of theory. This dataset is also hosted at github.com/isayev/COMP6.",
+    "view_url_hdf5": null,
+    "view_url_plaintext": null,
+    "data_points": 1791,
+    "theory_level": "DFT",
+    "sampling": "MD 300K",
+    "kvs": [],
+    "citations": [
+      {
+        "doi": "10.1063/1.5023802",
+        "url": "https://aip.scitation.org/doi/full/10.1063/1.5023802",
+        "_bibtex": "\\n@article{smith2018less,\\n  title={Less is more: Sampling chemical space with active learning},\\n  author={Smith, Justin S and Nebgen, Ben and Lubbers, Nicholas and Isayev, Olexandr and Roitberg, Adrian E},\\n  journal={The Journal of chemical physics},\\n  volume={148},\\n  number={24},\\n  pages={241733},\\n  year={2018},\\n  publisher={AIP Publishing}\\n}\\n",
+        "_acs_citation": "Smith, J. S.; Nebgen, B.; Lubbers, N.; Isayev, O. &amp; Roitberg, A. E. Less is more: Sampling chemical space with active learning. <em>J. Chem. Phys.,</em> <b>2018</b><i>, 148</i>, 241733."
+      }
+    ],
+    "labels": [
+      "energy",
+      "gradient",
+      "charges",
+      "dipole",
+      "spin density"
+    ],
+    "elements": [
+      "H",
+      "O",
+      "N",
+      "C"
+    ]
+}
