@@ -2,6 +2,9 @@ from flask import render_template, redirect, url_for, abort, flash, request,\
     current_app, make_response
 
 from . import main
+import json
+import os
+from random import randint
 
 
 # @main.after_app_request
@@ -47,12 +50,23 @@ def app_in_iframe():
 #     resp.set_cookie('show_followed', '', max_age=30*24*60*60)
 #     return resp
 
-@main.route('/ml_datasets')
+@main.route('/ml_datasets/')
 def ml_datasets():
-    apps = [
-        {'name': 'Reaction Viewer', 'link': '/reaction_viewer/'},
-        {'name': 'App inside an iFrame', 'link': '/app_in_iframe/'},
-        {'name': 'Example Dash with different style', 'link': '/dash_example/'},
-        {'name': 'App with multiple pages', 'link': '/reaction_multi/'},
-    ]
-    return render_template('ML_datasets.html', apps=apps)
+
+    return render_template('ml_datasets.html')
+
+@main.route('/ml_datasets_list/')
+def ml_datasets_list():
+
+    # data_path = os.path.join(current_app.root_path, 'data', 'table_example.json')
+    data_path = os.path.join(current_app.root_path, 'data', 'matt_sample.json')
+    data_one = json.load(open(data_path))
+
+    data = {}
+    data['data'] = [data_one.copy() for i in range(30)]
+
+    for i, d in enumerate(data['data']):
+        d['name'] = d['name'] + ' - ' + str(i)
+        d['data_points'] = randint(100, 1000)
+
+    return data

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+
+{% block styles %}
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"/>
+
+    {% assets 'ml_datasets_css' %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+
+{% endblock %}
+
+{% block title %} QCArchive {% endblock %}
+
+{% block page_content %}
+
+    <h2 class="text-center my-5">Machine Learning Datasets</h2>
+
+
+    <table id="ds_table" class="table " style="width:100%">
+{#        <thead>#}
+{#            <tr>#}
+{#                <th>Name</th>#}
+{#                <th>Position</th>#}
+{#                <th>Office</th>#}
+{#                <th>Extn.</th>#}
+{#                <th>Start date</th>#}
+{#                <th>Salary</th>#}
+{#            </tr>#}
+{#        </thead>#}
+{#        <tfoot>#}
+{#            <tr>#}
+{#                <th>Name</th>#}
+{#                <th>Position</th>#}
+{#                <th>Office</th>#}
+{#                <th>Extn.</th>#}
+{#                <th>Start date</th>#}
+{#                <th>Salary</th>#}
+{#            </tr>#}
+{#        </tfoot>#}
+    </table>
+
+    <div style="display: None">
+        <div class="ds_details_template">
+            <div class="row mx-auto py-2">
+                <div class="col-md-7">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Description</h5>
+                            <p class="description card-text"></p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 px-0">
+                    <div class="col pb-2">
+                        <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Keywords</h5>
+                            <span class="badge badge-danger">keyword1</span>
+
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Citations</h5>
+                            <p class="citations card-text"></p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- None -->
+
+    <div style="display: None">
+        <div class="download_template">
+
+                <a id="hdf5" class="btn btn-sm btn-download1" href="#">
+                    <i class="fa fa-download"></i> HDF5
+                </a>
+                <a id="text" class="btn btn-sm btn-download2" href="#">
+                     <i class="fa fa-download"></i> Text
+                </a>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+
+{#    <script type="text/javascript" src="{{ url_for('static', filename='ml_datasets.js')}}"></script>#}
+
+
+{% endblock %}
+
+

@@ -1,0 +1,126 @@
+@import "variables";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+
+
+
+$dark_red: #b62020;
+$dark_blue: #1a8fbf;
+$light_gray: #f0f2f5;
+$d_gray: #a6a7aa;
+
+body {
+  font-family: open sans,sans-serif;
+  color: #575757;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.icon {
+    font-family: "FontAwesome";
+    font-weight: 900;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -wzipebkit-font-smoothing: antialiased;
+}
+
+td.details-control::before {
+    @extend .icon;
+    content: "\f0fe";
+    color: $dark_blue;
+
+}
+tr.shown td.details-control::before {
+    @extend .icon;
+    content: "\f146";
+    color: $dark_red;
+}
+
+div.dataTables_wrapper div.dataTables_filter{
+    width:100%;
+    text-align: center;
+}
+
+.card {
+  background: white;
+}
+.light-gray-bg{
+  background: $light_gray;
+  margin: 5px;
+}
+
+.btn-download1 {
+  color: #fff;
+  background-color: $dark_blue;
+  border-color: $dark_blue;
+}
+
+.btn-download2 {
+  color: #fff;
+  background-color: $dark_red;
+  border-color: $dark_red;
+}
+
+a {
+  color: #20a8d8;
+}
+
+div.dataTables_paginate ul.pagination {
+  justify-content: center !important;
+}
+
+.page-link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #20a8d8;
+  background-color: #fff;
+  border: 1px solid #c8ced3;
+}
+
+.page-item.active .page-link {
+    color: #fff;
+    background-color: #20a8d8;
+    border-color: #20a8d8;
+}
+
+button {
+
+  //background:  $dark_blue;
+}
+//.dataTables_wrapper .dataTables_filter {
+//  width:100%;
+//  text-align:center;
+//}
+
+.badge {
+    display: inline-block;
+    padding: 3px 5px;
+    font-size: 85%;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+
+.badge-success {
+    color: #fff;
+    background-color: #9ccc65;
+}
+
+.badge-warning {
+    color: #fff;
+    background-color: #ffca28;
+}
+.badge-primary {
+    color: #fff;
+    background-color: #3f9ce8;
+}
