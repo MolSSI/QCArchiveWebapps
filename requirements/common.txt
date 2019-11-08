@@ -18,9 +18,11 @@ Flask_Assets
 html5lib
 cssmin
 lesscpy
-pyScss
-#libsass
+#pyScss_old
+libsass
 jsmin
+#rjsmin
+#rcssmin
 itsdangerous
 Jinja2
 Mako
@@ -37,4 +39,4 @@ Werkzeug
 WTForms
 dash
 pandas
-qcportal==0.11.*
+qcportal==0.12.*
