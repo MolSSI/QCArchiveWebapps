@@ -32,6 +32,7 @@ td.details-control::before {
     color: $dark_blue;
 
 }
+
 tr.shown td.details-control::before {
     @extend .icon;
     content: "\f146";
@@ -43,9 +44,22 @@ div.dataTables_wrapper div.dataTables_filter{
     text-align: center;
 }
 
+div.dataTables_filter{
+    @extend .mb-4;
+}
+
+.dataTable {
+
+   th, tr {
+     text-align: center;
+   }
+
+}
+
 .card {
   background: white;
 }
+
 .light-gray-bg{
   background: $light_gray;
   margin: 5px;

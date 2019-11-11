@@ -32,7 +32,7 @@ $(document).ready( function () {
     console.log('Creating datatable');
     var table = $('#ds_table').DataTable({
 
-        dom: 'f l r <t> i p',
+        dom: 'f r <t> i p',  // 'f l r <t> i p'
         searching: true,
         pageLength: 12,
         ordering:  true,
