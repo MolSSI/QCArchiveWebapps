@@ -24,6 +24,10 @@ class Config:
     # TODO: define in each environment
     # QCPORTAL_URI = ''
 
+    # Flask-Caching related configs
+    CACHE_TYPE = "simple",
+    CACHE_DEFAULT_TIMEOUT =  60 * 60 * 2  # seconds
+
     @staticmethod
     def init_app(app):
         pass
@@ -34,6 +38,8 @@ class DevelopmentConfig(Config):
     ASSETS_DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+
+    CACHE_DEFAULT_TIMEOUT =  80  # seconds
 
 
 class TestingConfig(Config):

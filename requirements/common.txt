@@ -39,4 +39,5 @@ Werkzeug
 WTForms
 dash
 pandas
+Flask-Caching
 qcportal==0.12.*

@@ -2,10 +2,11 @@ from flask import render_template, redirect, url_for, abort, flash, request,\
     current_app, make_response
 
 from . import main
+from .. import cache
 import json
 import os
 from random import randint
-
+import qcportal as plt
 
 # @main.after_app_request
 # def after_request(response):
@@ -55,10 +56,11 @@ def ml_datasets():
 
     return render_template('ml_datasets.html')
 
+
 @main.route('/ml_datasets_list/')
+@cache.cached()
 def ml_datasets_list():
 
-    # data_path = os.path.join(current_app.root_path, 'data', 'table_example.json')
     data_path = os.path.join(current_app.root_path, 'data', 'matt_sample.json')
     data_one = json.load(open(data_path))
 
