@@ -68,5 +68,7 @@ def ml_datasets_list():
     for i, d in enumerate(data['data']):
         d['name'] = d['name'] + ' - ' + str(i)
         d['data_points'] = randint(100, 1000)
+        if d['data_points'] < 500:
+            d['view_url_plaintext'] = 'molssi.org';
 
     return data

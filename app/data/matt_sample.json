@@ -11,7 +11,7 @@
     ],
     "tagline": "Benchmark containing MD trajectories from the ANI-1x potential.",
     "description": "A member of the COMP6 benchmark set, this dataset contains MD trajectories generated using the ANI-1x potential at 300K for 14 drug molecules and two peptides. Each trajectory is 128 frames subsampled from 1 ns of dynamics. Reference calculations are perfomed at the \\u03c9B97x/6-31g* level of theory. This dataset is also hosted at github.com/isayev/COMP6.",
-    "view_url_hdf5": null,
+    "view_url_hdf5": "my_url",
     "view_url_plaintext": null,
     "data_points": 1791,
     "theory_level": "DFT",

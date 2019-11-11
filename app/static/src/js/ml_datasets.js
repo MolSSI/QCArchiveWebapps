@@ -20,10 +20,24 @@ function format_details( data ) {
     return details;
 }
 
-function format_buttons(){
+function format_buttons(data, type, row, meta){
 
     var buttons = $('.download_template').clone();
     buttons.removeClass('download_template');
+
+    if (!data.view_url_hdf5) {
+        buttons.find('#hdf5').remove();
+    }
+    else {
+        buttons.find('#hdf5').attr('href', data.view_url_hdf5);
+    }
+
+    if (!data.view_url_plaintext) {
+        buttons.find('#text').remove();
+    }
+    else {
+        buttons.find('#text').attr('href', data.view_url_plaintext);
+    }
 
     return buttons.html();
 }
@@ -51,13 +65,13 @@ $(document).ready( function () {
             { title: "Name" , data: "name" },
             { title: "Quality", data: "theory_level" },
             { title: "Data Points", data: "data_points" },
-            { title: "Elements", data: "elements" },
+            { title: "Elements", data: null, render: "elements" },
             {
                 "title": "Download",
                 "targets": -1,  // first col from right
-                "data": null,
+                "data": null,   //pass the whole row to the render function
                 "orderable": false,
-                "defaultContent": format_buttons(),
+                "render": format_buttons,
             }
         ],
 
@@ -68,26 +82,24 @@ $(document).ready( function () {
 
     });
 
-    function download_dataset(type, data){
-        console.log('Downloading..', type);
-        console.log('data: ', data);
-        alert( data.name +"'s salary is: "+ data.salary);
-    }
+    // function download_dataset(type, data){
+    //     console.log('Downloading..', type);
+    //     console.log('data: ', data);
+    //     alert( data.name +"'s salary is: "+ data.salary);
+    // }
 
-    $('#ds_table tbody').on( 'click', 'button#hdf5', function () {
-        var data = table.row( $(this).parents('tr') ).data();
-        download_dataset('hdf5', data);
-    } );
+    // $('#ds_table tbody').on( 'click', 'a#hdf5', function (e) {
+    //     var data = table.row( $(this).parents('tr') ).data();
+    //     download_dataset('hdf5', data);
+    // } );
+    //
+    // $('#ds_table tbody').on( 'click', 'a#text', function (e) {
+    //     var data = table.row( $(this).parents('tr') ).data();
+    //     download_dataset('zip', data);
+    // } );
 
-    $('#ds_table tbody').on( 'click', 'button#text', function () {
-        var data = table.row( $(this).parents('tr') ).data();
-        download_dataset('zip', data);
-    } );
 
-    // table.buttons().container()
-    //     .appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
-
-       // Add event listener for opening and closing details
+    // Add event listener for opening and closing details
     $('#ds_table tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );

@@ -3,7 +3,6 @@
 
 
 
-
 $dark_red: #b62020;
 $dark_blue: #1a8fbf;
 $light_gray: #f0f2f5;
@@ -14,7 +13,6 @@ body {
   color: #575757;
   -webkit-font-smoothing: antialiased;
 }
-
 
 .icon {
     font-family: "FontAwesome";
@@ -65,20 +63,22 @@ div.dataTables_filter{
   margin: 5px;
 }
 
-.btn-download1 {
+a {
+  color: #20a8d8;
+}
+
+.btn-download1, .btn-download1:visited, .btn-download1:focus {
   color: #fff;
   background-color: $dark_blue;
   border-color: $dark_blue;
+  float: left;
 }
 
-.btn-download2 {
+.btn-download2, btn-download2:visited .btn-download2:visited, .btn-download2:focus {
   color: #fff;
   background-color: $dark_red;
   border-color: $dark_red;
-}
-
-a {
-  color: #20a8d8;
+  float: right;
 }
 
 div.dataTables_paginate ul.pagination {
@@ -102,14 +102,6 @@ div.dataTables_paginate ul.pagination {
     border-color: #20a8d8;
 }
 
-button {
-
-  //background:  $dark_blue;
-}
-//.dataTables_wrapper .dataTables_filter {
-//  width:100%;
-//  text-align:center;
-//}
 
 .badge {
     display: inline-block;
@@ -123,7 +115,6 @@ button {
     border-radius: .25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-
 
 .badge-success {
     color: #fff;
