@@ -13,9 +13,13 @@ function format_details( data ) {
         citations += '<li>' + data.citations[i].acs_citation + '</li>';
     }
     citations += '</ul>';
-
     details.find('.citations').append(citations);
 
+    keywords = '';
+    for (var key in data.labels){
+         keywords += '<span class="badge badge-success mr-1">'+ data.labels[key] + '</span>';
+    }
+    details.find('.keywords').append(keywords);
 
     return details;
 }
