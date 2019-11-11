@@ -57,20 +57,53 @@ def ml_datasets():
     return render_template('ml_datasets.html')
 
 
-@main.route('/ml_datasets_list/')
-@cache.cached()
-def ml_datasets_list():
+@cache.cached()  # timeout in config
+def _get_qcarchive_collections():
+    """Get Machine Learning datasets from QCArchive server"""
 
-    data_path = os.path.join(current_app.root_path, 'data', 'matt_sample.json')
-    data_one = json.load(open(data_path))
+    # connection client to MolSSI server
+    client = plt.FractalClient()
 
-    data = {}
-    data['data'] = [data_one.copy() for i in range(30)]
+    collection_types = ['dataset', 'reactiondataset']
 
-    for i, d in enumerate(data['data']):
-        d['name'] = d['name'] + ' - ' + str(i)
-        d['data_points'] = randint(100, 1000)
-        if d['data_points'] < 500:
-            d['view_url_plaintext'] = 'molssi.org';
+    payload = {
+        "meta": {
+            "exclude": ["records", "contributed_values"],
+        },
+        "data": {"collection": None}
+    }
+
+    results = []
+    for type in collection_types:
+        # must have the type to use exclude functionality
+        payload['data']['collection'] = type
+        # HTTP request to load the data
+        res = client._automodel_request("collection", "get", payload, full_return=False)
+        results.extend(res)
+
+    print('Total: ', len(results))
+
+    data = []
+    for r in results:
+        if "machine learning" in r["tags"]:
+            r["tags"].remove("machine learning")
+        else:   # skip non ML datasets
+            continue
+
+        if r['metadata']:  # add metadata attributes
+            r.update(r.pop("metadata"))
+
+        data.append(r)
+
+    # data_path = os.path.join(current_app.root_path, 'data', 'server_all_response.json')
+    # json.dump(data, open(data_path, 'w'))
 
     return data
+
+
+@main.route('/ml_datasets_list/')
+def ml_datasets_list():
+
+    data = _get_qcarchive_collections()
+
+    return {'data': data}

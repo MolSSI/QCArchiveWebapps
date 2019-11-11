@@ -10,7 +10,7 @@ function format_details( data ) {
 
     citations = '<ul>';
     for (var i in data.citations){
-        citations += '<li>' + data.citations[i]._acs_citation + '</li>';
+        citations += '<li>' + data.citations[i].acs_citation + '</li>';
     }
     citations += '</ul>';
 
@@ -65,7 +65,7 @@ $(document).ready( function () {
             { title: "Name" , data: "name" },
             { title: "Quality", data: "theory_level" },
             { title: "Data Points", data: "data_points" },
-            { title: "Elements", data: null, render: "elements" },
+            { title: "Elements", data: "elements" },
             {
                 "title": "Download",
                 "targets": -1,  // first col from right
@@ -81,6 +81,9 @@ $(document).ready( function () {
         // ]
 
     });
+
+    // Disable datatable warnings
+    // $.fn.dataTable.ext.errMode = 'none';
 
     // function download_dataset(type, data){
     //     console.log('Downloading..', type);
