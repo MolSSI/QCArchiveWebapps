@@ -21,11 +21,17 @@ function format_details( data ) {
     citations += '</ul>';
     details.find('.citations').append(citations);
 
-    keywords = '';
+    labels = '';
     for (var key in data.labels){
-         keywords += '<span class="badge badge-success mr-1">'+ data.labels[key] + '</span>';
+         labels += '<span class="badge badge-success mr-1">'+ data.labels[key] + '</span>';
     }
-    details.find('.keywords').append(keywords);
+    details.find('.labels').append(labels);
+
+    tags = '';
+    for (var key in data.tags){
+         tags += '<span class="badge badge-warning mr-1">'+ data.tags[key] + '</span>';
+    }
+    details.find('.tags').append(tags);
 
     return details;
 }

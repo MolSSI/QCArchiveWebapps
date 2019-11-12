@@ -105,16 +105,16 @@ div.dataTables_paginate ul.pagination {
 
 
 .badge {
-    display: inline-block;
+    //display: inline-block;
     padding: 3px 5px;
     font-size: 85%;
-    font-weight: 600;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    font-weight: 700;
+    //line-height: 1;
+    //text-align: center;
+    //white-space: nowrap;
+    //vertical-align: baseline;
+    //border-radius: .25rem;
+    //transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .badge-success {
@@ -123,10 +123,15 @@ div.dataTables_paginate ul.pagination {
 }
 
 .badge-warning {
-    color: #fff;
-    background-color: #ffca28;
+    color: #23282c;
+    background-color: #ffc107;
 }
 .badge-primary {
-    color: #fff;
-    background-color: #3f9ce8;
+        color: #23282c;
+    background-color: #63c2de;
+}
+
+.badge-danger {
+  color: #fff;
+  background-color: #f86c6b;
 }
