@@ -76,6 +76,7 @@ $(document).ready( function () {
             { title: "Quality", data: "theory_level" },
             { title: "Data Points", data: "data_points" },
             { title: "Elements", data: "elements" },
+            { title: "Sampling", data: "sampling" },
             {
                 "title": "Download",
                 "targets": -1,  // first col from right
