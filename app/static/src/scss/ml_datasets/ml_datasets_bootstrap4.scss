@@ -17,6 +17,7 @@ body {
 .icon {
     font-family: "FontAwesome";
     font-weight: 900;
+    font-size: 130%;
     display: inline-block;
     font-style: normal;
     font-variant: normal;
@@ -105,16 +106,9 @@ div.dataTables_paginate ul.pagination {
 
 
 .badge {
-    //display: inline-block;
     padding: 3px 5px;
     font-size: 85%;
     font-weight: 700;
-    //line-height: 1;
-    //text-align: center;
-    //white-space: nowrap;
-    //vertical-align: baseline;
-    //border-radius: .25rem;
-    //transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .badge-success {
