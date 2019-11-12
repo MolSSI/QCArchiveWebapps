@@ -80,7 +80,7 @@ $(document).ready( function () {
             },
             { title: "Name" , data: "name" },
             { title: "Quality", data: "theory_level" },
-            { title: "Data Points", data: "data_points" },
+            { title: "Data Points", data: "data_points", className: "numeric" },
             { title: "Elements", data: "elements" },
             { title: "Sampling", data: "sampling" },
             {

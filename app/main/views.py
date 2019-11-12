@@ -93,10 +93,8 @@ def _get_qcarchive_collections():
         if r['metadata']:  # add metadata attributes
             r.update(r.pop("metadata"))
 
+        r['data_points'] = f'{r["data_points"]:,}'
         data.append(r)
-
-    # data_path = os.path.join(current_app.root_path, 'data', 'server_all_response.json')
-    # json.dump(data, open(data_path, 'w'))
 
     return data
 

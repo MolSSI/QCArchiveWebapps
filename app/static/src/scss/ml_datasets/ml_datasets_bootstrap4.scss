@@ -87,6 +87,11 @@ div.dataTables_paginate ul.pagination {
   justify-content: center !important;
 }
 
+td.numeric {
+  text-align: right;
+  padding-right: 30px;
+}
+
 .page-link {
   position: relative;
   display: block;
