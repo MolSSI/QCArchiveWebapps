@@ -8,7 +8,7 @@ function format_details( data ) {
 
     details.find('.description').append(data.description);
     details.find('.elements')
-           .text(format_elements(data.elements, null, null, null, true));
+           .append(format_elements(data.elements, null, null, null, true));
 
     citations = '<ul>';
     for (var i in data.citations){
@@ -62,23 +62,44 @@ function format_buttons(data, type, row, meta){
 
 function format_elements(data, type, row, meta, full){
 
-    console.log('elements: ', data);
+    console.log('jmol in formar elements: ', window.jmol_colors);
 
     out = '';
     for (var i in data){
-        out += data[i] + ', ';
-        if (!full & i == 4){
-            out += '.... ';
+
+        if (!full & i == 5){
+            out += ' ...';
             break;
         }
+
+        var ele = '';
+        if (window.jmol_colors){
+            var style = 'style="background-color: ' + window.jmol_colors[data[i]] +'"';
+            ele = '<span class="badge mr-1"'
+                  + style + '>'
+                  + data[i] + '</span>';
+        } else {
+            if (i > 0)
+                ele += ', ';
+            ele += data[i];
+        }
+
+        out += ele;
     }
 
-    out = out.slice(0, -2);
 
     return out;
 }
 
 $(document).ready( function () {
+
+    $.ajax({
+        url: '/static/jmol_colors.json',
+        async: false,
+    }).done(function (data) {
+        window.jmol_colors = data;
+    });
+
     console.log('Creating datatable');
     var table = $('#ds_table').DataTable({
 
@@ -91,6 +112,7 @@ $(document).ready( function () {
         //compact: true,  // styles classes not here
 
         "ajax": "/ml_datasets_list/",
+
         "columns": [
             {   // expand button
                 "className": 'details-control',
@@ -101,16 +123,18 @@ $(document).ready( function () {
             { title: "Name" , data: "name" },
             { title: "Quality", data: "theory_level" },
             { title: "Data Points", data: "data_points", className: "numeric" },
-            { title: "Elements", data: "elements", render: format_elements},
+            { title: "Elements", data: "elements", render: format_elements, className: "elements-cell"},
             { title: "Sampling", data: "sampling" },
             {
                 "title": "Download",
                 "targets": -1,  // first col from right
                 "data": null,   //pass the whole row to the render function
                 "orderable": false,
+                "className": "btns-cell",
                 "render": format_buttons,
             }
         ],
+
 
         // dom: 'Bfrtip',
         // buttons: [

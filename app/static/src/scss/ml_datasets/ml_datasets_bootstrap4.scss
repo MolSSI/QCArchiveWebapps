@@ -114,6 +114,7 @@ td.numeric {
     padding: 3px 5px;
     font-size: 85%;
     font-weight: 700;
+    color: black;  // default
 }
 
 .badge-success {
@@ -133,4 +134,8 @@ td.numeric {
 .badge-danger {
   color: #fff;
   background-color: #f86c6b;
+}
+
+.elements-cell, .btns-cell {
+  min-width: 170px;
 }
