@@ -6,7 +6,9 @@ function format_details( data ) {
     var details = $('.ds_details_template').clone();
     details.removeClass('ds_details_template');
 
-    details.find('.description').text(data.description);
+    details.find('.description').append(data.description);
+    details.find('.elements')
+           .text(format_elements(data.elements, null, null, null, true));
 
     citations = '<ul>';
     for (var i in data.citations){
@@ -58,6 +60,24 @@ function format_buttons(data, type, row, meta){
     return buttons.html();
 }
 
+function format_elements(data, type, row, meta, full){
+
+    console.log('elements: ', data);
+
+    out = '';
+    for (var i in data){
+        out += data[i] + ', ';
+        if (!full & i == 4){
+            out += '.... ';
+            break;
+        }
+    }
+
+    out = out.slice(0, -2);
+
+    return out;
+}
+
 $(document).ready( function () {
     console.log('Creating datatable');
     var table = $('#ds_table').DataTable({
@@ -81,7 +101,7 @@ $(document).ready( function () {
             { title: "Name" , data: "name" },
             { title: "Quality", data: "theory_level" },
             { title: "Data Points", data: "data_points", className: "numeric" },
-            { title: "Elements", data: "elements" },
+            { title: "Elements", data: "elements", render: format_elements},
             { title: "Sampling", data: "sampling" },
             {
                 "title": "Download",
