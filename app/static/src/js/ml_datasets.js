@@ -10,7 +10,13 @@ function format_details( data ) {
 
     citations = '<ul>';
     for (var i in data.citations){
-        citations += '<li>' + data.citations[i].acs_citation + '</li>';
+        citations += '<li>' + data.citations[i].acs_citation;
+
+        if (data.citations[i].url)
+            citations += ' <a target="_blank" href="' + data.citations[i].url + '">'
+                + data.citations[i].url + '</a>';
+
+        citations+= '</li>';
     }
     citations += '</ul>';
     details.find('.citations').append(citations);
