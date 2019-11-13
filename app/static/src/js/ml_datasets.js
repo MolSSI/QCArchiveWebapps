@@ -62,8 +62,6 @@ function format_buttons(data, type, row, meta){
 
 function format_elements(data, type, row, meta, full){
 
-    console.log('jmol in formar elements: ', window.jmol_colors);
-
     out = '';
     for (var i in data){
 
