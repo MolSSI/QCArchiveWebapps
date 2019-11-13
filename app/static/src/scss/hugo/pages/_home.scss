@@ -115,10 +115,14 @@
 				font-size: 14px;
 			}
 		}
-	}	
+	}
 }
 
 .feature{
+	padding: 50px 0;
+	.row {
+		align-items: center;
+	}
 	.feature-content{
 		h2, p{
 			margin-bottom: 25px;
@@ -133,9 +137,9 @@
 		}
 		p{
 			font-family: $secondary-font;
-			margin-bottom: 10px;
+			margin-bottom: 1.1rem;
 			font-style: italic;
-			color: #242424;
+			color: $text-color-light;
 		}
 		ul.meta{
 			li{
@@ -148,6 +152,13 @@
 				}
 			}
 		}
+	}
+	& + .feature {
+		padding-top: 0;
+	}
+
+	@include screenHeightLPlus {
+		padding: 8rem 0;
 	}
 }
 
@@ -205,9 +216,11 @@
 		h2{
 			font-size: 30px;
 			color: $light;
+			margin-bottom: 1.4rem;
 		}
 		p{
 			margin-bottom: 30px;
+			color: $light-gray;
 		}
 		a{
 			i.video{
@@ -230,8 +243,18 @@
 
 .testimonial{
 	.testimonial-slider{
+		.owl-stage {
+			display: flex;
+
+			.owl-item {
+				display: flex;
+				flex-grow: 1;
+			}
+		}
 		.item{
 			padding-bottom: 10px;
+			display: flex;
+			flex-grow: 1;
 			.block{
 				padding: 40px;
 				text-align: center;
@@ -239,6 +262,7 @@
 		        border-radius: 5px;
 				.image{
 					margin-top: 30px;
+					margin-bottom: 5px;
 					margin-bottom: 5px;
 					width: 100%;
 					display: flex;
@@ -250,7 +274,7 @@
 						height: 40px;
 						width: 40px;
 				        border-radius: 100%;
-					}	
+					}
 				}
 				p{
 					font-family: $secondary-font;
@@ -276,7 +300,7 @@
 					span{
 						background: $primary-color;
 					}
-				}	
+				}
 			}
 		}
 	}
@@ -285,7 +309,7 @@
 
 
 /* homepage 3 */
-.gradient-banner{
+.gradient-banner {
 	padding: 100px 0 170px;
 	position: relative;
 	overflow: hidden;
@@ -298,7 +322,12 @@
     width: 200%;
     height: 200%;
     border-radius: 50%;
-    background-image: linear-gradient(45deg,#009EC5 0%, $primary-color 20%,#02225B 50%);
+    background-image: linear-gradient(45deg,#009EC5 0%, $primary-color 20%,#0c3580 50%);
+	}
+
+	.container {
+		position: relative;
+		z-index: 1;
 	}
 }
 
@@ -306,160 +335,18 @@
 	margin-top: -100px;
 }
 
-.shapes-container {
+.particles-container {
 	position: absolute;
-	overflow: hidden;
+	height: 100%;
+	width: 100%;
 	top: 0;
 	left: 0;
-	right: 0;
-	bottom: 0;
 
-	.shape {
+	#particles-js {
 		position: absolute;
-
-		&::before {
-			content: '';
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			background-color: rgba(255, 255, 255, .15);
-			transform: rotate(-35deg);
-			position: absolute;
-			border-radius: 50px;
-		}
+		height: 100%;
+		width: 100%;
+		top: 0;
+		left: 0;
 	}
-
-	.shape:nth-child(1) {
-		top: 2%;
-		left: 11%;
-		width: 400px;
-		height: 70px;
-	}
-
-	.shape:nth-child(2) {
-		top: 14%;
-		left: 18%;
-		width: 200px;
-		height: 15px;
-	}
-
-	.shape:nth-child(3) {
-		top: 80%;
-		left: 4%;
-		width: 300px;
-		height: 60px;
-	}
-
-	.shape:nth-child(4) {
-		top: 85%;
-		left: 15%;
-		width: 100px;
-		height: 10px;
-	}
-
-	.shape:nth-child(5) {
-		top: 5%;
-		left: 50%;
-		width: 300px;
-		height: 25px;
-	}
-
-	.shape:nth-child(6) {
-		top: 4%;
-		left: 52%;
-		width: 200px;
-		height: 5px;
-	}
-
-	.shape:nth-child(7) {
-		top: 80%;
-		left: 70%;
-		width: 200px;
-		height: 5px;
-	}
-
-	.shape:nth-child(8) {
-		top: 55%;
-		left: 95%;
-		width: 200px;
-		height: 5px;
-	}
-
-	.shape:nth-child(9) {
-		top: 50%;
-		left: 90%;
-		width: 300px;
-		height: 50px;
-	}
-
-	.shape:nth-child(10) {
-		top: 30%;
-		left: 60%;
-		width: 500px;
-		height: 55px;
-	}
-
-	.shape:nth-child(11) {
-		top: 60%;
-		left: 60%;
-		width: 200px;
-		height: 5px;
-	}
-
-	.shape:nth-child(12) {
-		top: 35%;
-		left: 75%;
-		width: 200px;
-		height: 5px;
-	}
-
-	.shape:nth-child(13) {
-		top: 90%;
-		left: 40%;
-		width: 300px;
-		height: 45px;
-	}
-
-	.shape:nth-child(14) {
-		top: 54%;
-		left: 75%;
-		width: 200px;
-		height: 5px;
-	}
-
-	.shape:nth-child(15) {
-		top: 50%;
-		left: 90%;
-		width: 200px;
-		height: 5px;
-	}
-
-	.shape:nth-child(16) {
-		top: 50%;
-		left: 81%;
-		width: 100px;
-		height: 5px;
-	}
-
-	.shape:nth-child(17) {
-		top: 10%;
-		right: 51%;
-		left: 49%;
-		width: 600px;
-		height: 600px;
-        position: relative;
-
-		&::before {
-			content: '';
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			background-color: rgba(255, 255, 255, .25);
-			transform: rotate(-45deg);
-			position: absolute;
-			border-radius: 50px;
-		}
-    }
 }

@@ -19,8 +19,8 @@ h1{
 }
 
 h2{
-	font-size: 40px;
-	line-height: 50px;
+	font-size: 33px;
+	line-height: 1.25em;
 }
 
 h3{
@@ -49,4 +49,10 @@ cite{
 	color: $text-color; 
 	line-height: 25px;
 	font-size: 16px;
+}
+
+// Override Bootstrap anchor styles
+a {
+  font-weight: 400;
+  color: $link-color;
 }
