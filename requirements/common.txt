@@ -40,4 +40,5 @@ WTForms
 dash
 pandas
 Flask-Caching
+Flask-Cors
 qcportal==0.12.*

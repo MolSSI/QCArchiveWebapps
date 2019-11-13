@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/MolSSI/QCArchive_webapps#readme",
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "iframe-resizer": "^4.2.6",
     "less": "^3.10.3",
-    "bootstrap": "^4.3.1"
+    "popper.js": "^1.16.0"
   }
 }

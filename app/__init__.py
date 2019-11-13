@@ -7,6 +7,7 @@ from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
 from flask_caching import Cache
+from flask_cors import CORS
 
 
 bootstrap = Bootstrap()
@@ -15,6 +16,7 @@ moment = Moment()
 db = SQLAlchemy()
 pagedown = PageDown()
 cache = Cache(config={'CACHE_TYPE': 'simple'})
+cors = CORS()
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -32,6 +34,8 @@ def create_app(config_name):
     login_manager.init_app(app)
     pagedown.init_app(app)
     cache.init_app(app)
+    cors.init_app(app)
+
 
     if app.config['SSL_REDIRECT']:
         from flask_sslify import SSLify
