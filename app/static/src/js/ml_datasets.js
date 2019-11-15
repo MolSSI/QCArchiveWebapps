@@ -150,15 +150,30 @@ $(document).ready( function () {
     //     alert( data.name +"'s salary is: "+ data.salary);
     // }
 
-    // $('#ds_table tbody').on( 'click', 'a#hdf5', function (e) {
-    //     var data = table.row( $(this).parents('tr') ).data();
-    //     download_dataset('hdf5', data);
-    // } );
-    //
-    // $('#ds_table tbody').on( 'click', 'a#text', function (e) {
-    //     var data = table.row( $(this).parents('tr') ).data();
-    //     download_dataset('zip', data);
-    // } );
+    function log_download(ds_name, type){
+         $.ajax({
+            url: '/log_access/download',
+            data: {
+                dataset_name: ds_name,
+                download_type: type
+            }
+        }).done(function (ret) {
+            console.log('logging download: ', ret);
+        });
+    }
+
+    $('#ds_table tbody').on( 'click', 'a#hdf5', function (e) {
+        var data = table.row( $(this).parents('tr') ).data();
+        console.log(data);
+
+        log_download(data.name, 'hdf5');
+    } );
+
+    $('#ds_table tbody').on( 'click', 'a#text', function (e) {
+        var data = table.row( $(this).parents('tr') ).data();
+        console.log(data);
+        log_download(data.name, 'text');
+    } );
 
 
     // Add event listener for opening and closing details

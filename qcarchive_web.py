@@ -13,12 +13,12 @@ if os.environ.get('FLASK_COVERAGE'):
 
 import sys
 import click
-from flask_migrate import Migrate, upgrade
+# from flask_migrate import Migrate, upgrade
 from app import create_app, db
 # from app.models import User, Follow, Role, Permission, Post, Comment
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-migrate = Migrate(app, db)
+# migrate = Migrate(app, db)
 
 
 # @app.shell_context_processor
@@ -73,8 +73,8 @@ def profile(length, profile_dir):
 def deploy():
     """Run deployment tasks."""
     # migrate database to latest revision
-    upgrade()
-
+    # upgrade()
+    pass
     # create or update user roles
     # Role.insert_roles()     # TODO: here?
 

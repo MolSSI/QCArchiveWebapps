@@ -9,7 +9,7 @@ Flask-Bootstrap4
 Flask-HTTPAuth
 Flask-Login
 Flask-Mail
-Flask-Migrate
+#Flask-Migrate
 Flask-Moment
 Flask-PageDown
 Flask-SQLAlchemy
@@ -32,7 +32,7 @@ python-dateutil
 python-dotenv
 python-editor
 six
-SQLAlchemy
+#SQLAlchemy
 visitor
 webencodings
 Werkzeug
