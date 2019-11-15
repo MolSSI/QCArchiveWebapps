@@ -8,12 +8,19 @@ from flask_pagedown import PageDown
 from config import config
 from flask_caching import Cache
 from flask_cors import CORS
+from flask_mongoengine import MongoEngine
+from flask_admin import Admin
+
+
+db = MongoEngine()
+# db = SQLAlchemy()
+app_admin = Admin(name='BSE Logging Admin', template_mode='bootstrap3',
+                  base_template='admin/custom_base.html')
 
 
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
-db = SQLAlchemy()
 pagedown = PageDown()
 cache = Cache(config={'CACHE_TYPE': 'simple'})
 cors = CORS()
@@ -47,17 +54,24 @@ def create_app(config_name):
         from .main import main as main_blueprint
         app.register_blueprint(main_blueprint)
 
-        # examples to use for auth, forms, etc
-        from .examples import examples as examples_blueprint
-        app.register_blueprint(examples_blueprint, url_prefix='/examples')
-
         # For authentication
         from .auth import auth as auth_blueprint
         app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-        # API if needed
-        from .api import api as api_blueprint
-        app.register_blueprint(api_blueprint, url_prefix='/api/v1')
+        # # API if needed
+        # from .api import api as api_blueprint
+        # app.register_blueprint(api_blueprint, url_prefix='/api/v1')
+
+        # create user roles
+        from .models.users import update_roles
+        update_roles()
+
+        # To avoid circular import
+        from app.admin import add_admin_views
+        add_admin_views()
+
+        # Then init the app
+        app_admin.init_app(app)
 
         # Register dash apps
         register_dashapps(flask_server=app)

@@ -4,22 +4,20 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+
+    # Mail
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in \
-        ['true', 'on', '1']
+                            ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[QCArchive]'
-    FLASKY_MAIL_SENDER = 'QCarchive Admin <admin@qcarchive.molssi.com>'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    MAIL_SUBJECT_PREFIX = '[QCArchive]'
+    MAIL_SENDER = 'QCArchive Admin <admin@qcarchive.molssi.com>'
+
     SSL_REDIRECT = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
-    FLASKY_POSTS_PER_PAGE = 20
-    FLASKY_FOLLOWERS_PER_PAGE = 50
-    FLASKY_COMMENTS_PER_PAGE = 30
-    FLASKY_SLOW_DB_QUERY_TIME = 0.5
 
     # TODO: define in each environment
     # QCPORTAL_URI = ''
@@ -27,6 +25,18 @@ class Config:
     # Flask-Caching related configs
     CACHE_TYPE = "simple",
     CACHE_DEFAULT_TIMEOUT =  60 * 60 * 2  # seconds
+
+    # Admin login
+    APP_ADMIN = os.environ.get('APP_ADMIN', 'daltarawy@vt.edu')
+    EMAIL_CONFIRMATION_ENABLED = False
+
+    # log page access to db or not
+    DB_LOGGING = True
+
+    MONGODB_SETTINGS = {
+        'host': os.environ.get('MONGO_URI',
+                               "mongodb://<dbuser>:<dbpassword>@ds061601.mlab.com:61601/qca_apps_db"),  # URI
+    }
 
     @staticmethod
     def init_app(app):

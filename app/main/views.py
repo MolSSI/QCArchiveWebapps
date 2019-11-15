@@ -3,10 +3,9 @@ from flask import render_template, redirect, url_for, abort, flash, request,\
 
 from . import main
 from .. import cache
-import json
-import os
-from random import randint
 import qcportal as plt
+from ..models import save_access
+
 
 # @main.after_app_request
 # def after_request(response):
@@ -54,8 +53,20 @@ def app_in_iframe():
 @main.route('/ml_datasets/')
 def ml_datasets():
 
+    save_access(page='ml_datasets', access_type='homepage')
+
     return render_template('ml_datasets.html')
 
+@main.route('/log_access/<access_type>/')
+def log_download(access_type):
+
+    ds_name = request.args.get('dataset_name', None)
+    ds_type = request.args.get('ds_type', None)
+
+    save_access(page='ml_datasets', access_type=access_type,
+                datasets_name=ds_name, download_type=ds_type)
+
+    return {'success': True}
 
 @cache.cached()  # timeout in config
 def _get_qcarchive_collections():
