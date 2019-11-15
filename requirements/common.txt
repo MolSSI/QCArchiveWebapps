@@ -41,4 +41,7 @@ dash
 pandas
 Flask-Caching
 Flask-Cors
+Flask_Mongoengine
+Flask_Admin
+geoip2
 qcportal==0.12.*
