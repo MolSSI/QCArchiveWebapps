@@ -4,8 +4,8 @@ blinker
 click
 dominate
 Flask>=1.0.0
-#Flask-Bootstrap
-Flask-Bootstrap4
+Flask-Bootstrap
+#Flask-Bootstrap4
 Flask-HTTPAuth
 Flask-Login
 Flask-Mail
