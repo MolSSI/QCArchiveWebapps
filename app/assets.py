@@ -22,7 +22,11 @@ def compile_assets(app):
                          filters='libsass',
                          output='dist/css/ml_datasets_bootstrap4.css')
 
-    js_bundle = Bundle('src/js/*.js',
+    ml_js = Bundle('src/js/ml_datasets.js',
+                       filters='jsmin',
+                       output='dist/js/ml_datasets.min.js')
+
+    js_base = Bundle('src/js/main.js',  # add all site wide JS files
                        filters='jsmin',
                        output='dist/js/main.min.js')
 
@@ -32,9 +36,12 @@ def compile_assets(app):
     # assets.register('less_all', less_bundle)
     assets.register('scss_all', scss_bundle)
     assets.register('ml_datasets_css', ml_datasets_css)
-    assets.register('js_all', js_bundle)
+    assets.register('js_base', js_base)
+    assets.register('ml_js', ml_js)
 
     # if app.env == 'development':
     # less_bundle.build(force=True)
     scss_bundle.build(force=True)
-    js_bundle.build()
+    js_base.build()
+    ml_datasets_css.build()
+    ml_js.build()

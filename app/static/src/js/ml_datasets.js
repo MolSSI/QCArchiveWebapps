@@ -160,20 +160,18 @@ $(document).ready( function () {
                 download_type: type
             }
         }).done(function (ret) {
-            console.log('logging download: ', ret);
+            // console.log('logging download: ', ret);
         });
     }
 
     $('#ds_table tbody').on( 'click', 'a#hdf5', function (e) {
         var data = table.row( $(this).parents('tr') ).data();
-        console.log(data);
 
         log_download(data.name, 'hdf5');
     } );
 
     $('#ds_table tbody').on( 'click', 'a#text', function (e) {
         var data = table.row( $(this).parents('tr') ).data();
-        console.log(data);
         log_download(data.name, 'text');
     } );
 
