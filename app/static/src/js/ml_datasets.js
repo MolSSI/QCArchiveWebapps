@@ -101,7 +101,7 @@ $(document).ready( function () {
     console.log('Creating datatable');
     var table = $('#ds_table').DataTable({
 
-        dom: 'f r <t> i p',  // 'f l r <t> i p'
+        dom: '<"toolbar">f r <t> i p',  // 'f l r <t> i p'
         searching: true,
         pageLength: 12,
         ordering:  true,
@@ -140,6 +140,8 @@ $(document).ready( function () {
         // ]
 
     });
+
+    $("div.toolbar").append('<a id="add_your_ds" href="#">Add Your Dataset</a>');
 
     // Disable datatable warnings
     // $.fn.dataTable.ext.errMode = 'none';
@@ -196,6 +198,28 @@ $(document).ready( function () {
 
         }
     } );
+
+    $('#dialog-message').dialog({
+        autoOpen: false,
+        modal: true,
+        width: '40%',
+        buttons: {
+          Ok: function() {
+            $( this ).dialog( "close" );
+          }
+        }
+    });
+
+    $('#add_your_ds').click(function (e) {
+        e.preventDefault();
+
+        var msg = "To add your Machine Learning Dataset, please "
+                  + "email us at <a class='card-link' href='mailto:qcarchive@molssi.org'>qcarchive@molssi.org</a>";
+
+        $('#dialog-message #msg').html(msg);
+        $('#dialog-message').dialog( "open" );
+
+    });
 
 } );
 

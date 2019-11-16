@@ -7,6 +7,7 @@ $dark_red: #b62020;
 $dark_blue: #1a8fbf;
 $light_gray: #f0f2f5;
 $d_gray: #a6a7aa;
+$link-color: #20a8d8;
 
 body {
   font-family: open sans,sans-serif;
@@ -54,6 +55,10 @@ div.dataTables_filter{
 
 }
 
+.toolbar {
+  float: left;
+}
+
 .card {
   background: white;
   text-align: left;
@@ -62,10 +67,6 @@ div.dataTables_filter{
 .light-gray-bg{
   background: $light_gray;
   margin: 5px;
-}
-
-a {
-  color: #20a8d8;
 }
 
 .btn-download1, .btn-download1:visited, .btn-download1:focus {
@@ -97,15 +98,15 @@ td.numeric {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #20a8d8;
+  color: $link-color;
   background-color: #fff;
   border: 1px solid #c8ced3;
 }
 
 .page-item.active .page-link {
     color: #fff;
-    background-color: #20a8d8;
-    border-color: #20a8d8;
+    background-color: $link-color;
+    border-color: $link-color;
 }
 
 
@@ -138,4 +139,26 @@ td.numeric {
 
 .elements-cell, .btns-cell {
   min-width: 170px;
+}
+
+.ui-dialog {
+  //extend Bootstrap modal
+  @extend .modal-content;
+
+  //.ui-dialog-titlebar {
+  //  @extend .modal-header;
+  //}
+
+  //.ui-button {
+  //  @extend .close;
+  //}
+
+  .ui-dialog-content {
+    @extend .modal-body;
+  }
+
+  .ui-widget-content a {
+    color: $link_color;
+  }
+
 }
