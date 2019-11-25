@@ -101,7 +101,7 @@ $(document).ready( function () {
     console.log('Creating datatable');
     var table = $('#ds_table').DataTable({
 
-        dom: '<"toolbar">f r <t> i p',  // 'f l r <t> i p'
+        dom: '<"toolbar"> f r <t> i p',  // 'f l r <t> i p'
         searching: true,
         pageLength: 12,
         ordering:  true,
@@ -201,6 +201,9 @@ $(document).ready( function () {
         autoOpen: false,
         modal: true,
         width: '40%',
+        position: {
+          at: "center top",
+        },
         buttons: {
           Ok: function() {
             $( this ).dialog( "close" );
