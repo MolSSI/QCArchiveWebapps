@@ -91,6 +91,9 @@ def register_dashapps(flask_server):
         Add any new apps here
     """
 
+    from .dash_apps.education.index import EducationApp
+    EducationApp(flask_server, '/education/')
+
     from .dash_apps.dash_example.index import DashExampleApp
     DashExampleApp(flask_server, '/dash_example/')
 

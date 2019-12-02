@@ -40,6 +40,8 @@ def server_shutdown():
 @main.route('/')
 def index():
     apps = [
+        {'name': 'Education App', 'link': '/education/'},
+        {'name': 'Machine Learning Datasets', 'link': '/ml_datasets/'},
         {'name': 'Reaction Viewer', 'link': '/reaction_viewer/'},
         {'name': 'App inside an iFrame', 'link': '/app_in_iframe/'},
         {'name': 'Example Dash with different style', 'link': '/dash_example/'},
