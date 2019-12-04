@@ -2,6 +2,7 @@
 @import "../../../../../node_modules/bootstrap/scss/bootstrap";
 
 
+$break-small: 576px;
 
 $dark_red: #b62020;
 $dark_blue: #1a8fbf;
@@ -44,7 +45,7 @@ div.dataTables_wrapper div.dataTables_filter{
 }
 
 div.dataTables_filter{
-    @extend .mb-4;
+    @extend .mb-2;
 }
 
 .dataTable {
@@ -57,6 +58,16 @@ div.dataTables_filter{
 
 .toolbar {
   float: left;
+  margin-bottom: 20px;
+
+  a {
+    margin-right: 20px;
+  }
+
+  @media screen and (max-width: $break-small) {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .card {

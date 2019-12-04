@@ -64,7 +64,6 @@ function format_elements(data, type, row, meta, full){
 
     out = '';
     for (var i in data){
-
         if (!full & i == 5){
             out += ' ...';
             break;
@@ -81,10 +80,8 @@ function format_elements(data, type, row, meta, full){
                 ele += ', ';
             ele += data[i];
         }
-
         out += ele;
     }
-
 
     return out;
 }
@@ -101,7 +98,7 @@ $(document).ready( function () {
     console.log('Creating datatable');
     var table = $('#ds_table').DataTable({
 
-        dom: '<"toolbar"> f r <t> i p',  // 'f l r <t> i p'
+        dom: 'f <"toolbar"> r <t> i p',  // 'f l r <t> i p'
         searching: true,
         pageLength: 12,
         ordering:  true,
@@ -141,16 +138,11 @@ $(document).ready( function () {
 
     });
 
-    $("div.toolbar").append('<a id="add_your_ds" href="#">Add Your Dataset</a>');
+    $("div.toolbar").append(
+          '<a id="add_your_ds" href="#">Add your Dataset</a>'
+        + '<a id="license" href="#">License</a>'
+    );
 
-    // Disable datatable warnings
-    // $.fn.dataTable.ext.errMode = 'none';
-
-    // function download_dataset(type, data){
-    //     console.log('Downloading..', type);
-    //     console.log('data: ', data);
-    //     alert( data.name +"'s salary is: "+ data.salary);
-    // }
 
     function log_download(ds_name, type){
          $.ajax({
@@ -215,7 +207,18 @@ $(document).ready( function () {
         e.preventDefault();
 
         var msg = "To add your Machine Learning Dataset, please "
-                  + "email us at <a class='card-link' href='mailto:qcarchive@molssi.org'>qcarchive@molssi.org</a>";
+                  + "email us at <a class='card-link' href='mailto:qcarchive@molssi.org'>qcarchive@molssi.org</a>.";
+
+        $('#dialog-message #msg').html(msg);
+        $('#dialog-message').dialog( "open" );
+    });
+
+    $('#license').click(function (e) {
+        e.preventDefault();
+
+        var msg = "All datasets are provided under the "
+                  + "<a class='card-link' target='_blank' href='https://creativecommons.org/licenses/by/4.0/legalcode'>"
+                  + "Creative Commons 4.0 Attribution </a> license.";
 
         $('#dialog-message #msg').html(msg);
         $('#dialog-message').dialog( "open" );
