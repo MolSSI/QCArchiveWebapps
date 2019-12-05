@@ -13,7 +13,7 @@ def compile_assets(app):
     #                      extra={'rel': 'stylesheet/less' if app.debug else 'stylesheet'})
 
     bundles = {}
-    bundles['scss_bundle'] = Bundle('src/scss/hugo/style.scss', 'src/scss/hugo/dashapps.scss',
+    bundles['scss_hugo'] = Bundle('src/scss/hugo/style.scss', 'src/scss/hugo/dashapps.scss',
                          depends='**/*.scss',
                          filters='libsass',
                          output='dist/css/hugo_styles.css')

@@ -91,6 +91,7 @@ $(document).ready( function () {
     $.ajax({
         url: '/static/jmol_colors.json',
         async: false,
+        timeout: 1000,  // msec
     }).done(function (data) {
         window.jmol_colors = data;
     });
@@ -189,19 +190,6 @@ $(document).ready( function () {
         }
     } );
 
-    $('#dialog-message').dialog({
-        autoOpen: false,
-        modal: true,
-        width: '40%',
-        position: {
-          at: "center top",
-        },
-        buttons: {
-          Ok: function() {
-            $( this ).dialog( "close" );
-          }
-        }
-    });
 
     $('#add_your_ds').click(function (e) {
         e.preventDefault();
@@ -209,8 +197,8 @@ $(document).ready( function () {
         var msg = "To add your Machine Learning Dataset, please "
                   + "email us at <a class='card-link' href='mailto:qcarchive@molssi.org'>qcarchive@molssi.org</a>.";
 
-        $('#dialog-message #msg').html(msg);
-        $('#dialog-message').dialog( "open" );
+        $('#msg_dialog .modal-body p').html(msg);
+        $('#msg_dialog').modal();
     });
 
     $('#license').click(function (e) {
@@ -220,8 +208,8 @@ $(document).ready( function () {
                   + "<a class='card-link' target='_blank' href='https://creativecommons.org/licenses/by/4.0/legalcode'>"
                   + "Creative Commons 4.0 Attribution </a> license.";
 
-        $('#dialog-message #msg').html(msg);
-        $('#dialog-message').dialog( "open" );
+        $('#msg_dialog .modal-body p').html(msg);
+        $('#msg_dialog').modal();
 
     });
 
