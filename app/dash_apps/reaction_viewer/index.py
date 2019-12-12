@@ -75,13 +75,25 @@ class ReactionViewerApp(DashAppBase):
             # multi=True,
         ]),
         html.Div([
+            html.Div([
             html.Label('Groupby:'),
             dcc.RadioItems(id='rds-groupby',
                            options=[{
-                               "label": x.title(),
-                               "value": x
-                           } for x in ["method", "basis", "d3"]],
-                           value=None),
+                               "label": "None",
+                               "value": "none"
+                           }, {
+                               "label": "Method",
+                               "value": "method"
+                           }, {
+                               "label": "Basis",
+                               "value": "basis"
+                           }, {
+                               "label": "D3",
+                               "value": "d3"
+                           }],
+                           value="none"),
+            ]),
+            html.Div([
             html.Label('Metric:'),
             dcc.RadioItems(id='rds-metric',
                            options=[{
@@ -92,6 +104,8 @@ class ReactionViewerApp(DashAppBase):
                                "value": "URE"
                            }],
                            value="UE"),
+            ]),
+            html.Div([
             html.Label('Plot type:'),
             dcc.RadioItems(id='rds-kind',
                            options=[{
@@ -102,6 +116,7 @@ class ReactionViewerApp(DashAppBase):
                                "value": "violin"
                            }],
                            value="bar"),
+            ]),
         ],
                  style={'columnCount': 2}),
 
@@ -154,6 +169,8 @@ class ReactionViewerApp(DashAppBase):
                 print("")
                 return {}
 
+            if groupby == "none":
+                groupby = None
             fig = ds.visualize(method=method, basis=basis, groupby=groupby, metric=metric, kind=kind, return_figure=True)
 
             cache.set(key, ds)
