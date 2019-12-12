@@ -52,6 +52,10 @@ class DevelopmentConfig(Config):
     CACHE_DEFAULT_TIMEOUT =  80  # seconds
 
 
+class MongoDefaultDevelopmentConfig(DevelopmentConfig):
+    MONGODB_SETTINGS = {}
+
+
 class TestingConfig(Config):
     TESTING = True
     # SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
@@ -141,5 +145,6 @@ config = {
     'docker': DockerConfig,
     'unix': UnixConfig,
 
-    'default': DevelopmentConfig
+    'default': DevelopmentConfig,
+    'mongo_default': MongoDefaultDevelopmentConfig,
 }
