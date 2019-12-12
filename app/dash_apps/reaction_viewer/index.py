@@ -104,7 +104,14 @@ class ReactionViewerApp(DashAppBase):
                            value="bar"),
         ],
                  style={'columnCount': 2}),
-        dcc.Graph(id='primary-graph')
+
+
+        dcc.Loading(
+                id="loading-1",
+                children=[dcc.Graph(id='primary-graph')],
+                type="default",
+            )
+        # dcc.Graph(id='primary-graph')
     ],
     className='container')
 
