@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from ..dash_base import DashAppBase
+from ... import cache
 from .connection import get_client
 
 
@@ -13,11 +14,16 @@ def list_collections():
     names = list(client.list_collections("reactiondataset").reset_index()["name"])
     return [{"label": k, "value": k} for k in names]
 
+@cache.memoize()
+def get_collection(name):
+    client = get_client()
+    ds = client.get_collection("reactiondataset", name)
+
+    return ds
 
 def get_history_values(name, category):
-    client = get_client()
 
-    ds = client.get_collection("reactiondataset", name)
+    ds = get_collection(name)
 
     methods = ds.list_values().reset_index()[category].unique()
     if category == "method":
@@ -130,15 +136,21 @@ class ReactionViewerApp(DashAppBase):
         ])
         def build_graph(dataset, method, basis, groupby, metric, kind):
 
-            client = get_client()
+            key = f"rd_df_dataset_cache_{dataset}"
+            if cache.get(key) is not None:
+                ds = cache.get(key)
+            else:
+                ds = get_collection(dataset)
 
-            ds = client.get_collection("reactiondataset", dataset)
             history = ds.list_values(method=method, basis=basis)
             if (method is None) or (basis is None):
                 print("")
                 return {}
 
             fig = ds.visualize(method=method, basis=basis, groupby=groupby, metric=metric, kind=kind, return_figure=True)
+
+            cache.set(key, ds)
+
             return fig
 
 
