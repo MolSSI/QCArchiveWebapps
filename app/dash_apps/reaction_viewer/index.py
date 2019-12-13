@@ -1,5 +1,6 @@
 from dash import Dash
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from ..dash_base import DashAppBase
@@ -37,17 +38,11 @@ class ReactionViewerApp(DashAppBase):
 
     layout = html.Div(
     [
+        dbc.Alert("The app is in a pre-alpha state and is for demonstration purposes only.", color="warning"),
         # Header
-        html.Div(
-            [
-                html.H3('Reaction Dataset Viewer',
-                         className='app-title'),
-            ],
-            # className='row twelve columns',
-            style={
-                'position': 'relative',
-                'right': '15px'
-            }),
+        dbc.Row([dbc.Col([
+            html.H3('Reaction Dataset Viewer'),
+        ])]),
 
         # Main selection tool
         # html.Div([
@@ -59,25 +54,23 @@ class ReactionViewerApp(DashAppBase):
         #     dcc.Dropdown(id='available-rds', options=list_collections(), className='twelve columns'),
         # ],
         #          className='row'),
-        html.Div([
-            html.Div([
-                html.P('First select a reaction dataset to get started:'),
-                #     html.P('SELECT a drug in the dropdown to add it to the drug candidates at the bottom.')
-            ]),
-            dcc.Dropdown(id='available-rds', options=list_collections(), value="S22"),
-            html.Div(id='rds-display-value'),
+        dbc.Row([
+            dbc.Col([dbc.Label("Choose a ReactionDataset:")], width=3),
+            dbc.Col([dcc.Dropdown(id='available-rds', options=list_collections(), value="S22")])
         ]),
-        html.Div([
-            html.Label('Select methods to display:'),
-            dcc.Dropdown(id='rds-available-methods', options=[], multi=True),
-            html.Label('Select bases to display:'),
-            dcc.Dropdown(id='rds-available-basis', options=[], multi=True),
+        dbc.Row([
+            dbc.Col([dbc.Label('Select methods to display:')], width=3),
+            dbc.Col([dcc.Dropdown(id='rds-available-methods', options=[], multi=True)]),
+        ]),
+        dbc.Row([
+            dbc.Col([dbc.Label('Select bases to display:')], width=3),
+            dbc.Col([dcc.Dropdown(id='rds-available-basis', options=[], multi=True)]),
             # multi=True,
         ]),
-        html.Div([
-            html.Div([
-            html.Label('Groupby:'),
-            dcc.RadioItems(id='rds-groupby',
+        dbc.Row([
+            dbc.Col([
+            dbc.Label('Groupby:'),
+            dbc.RadioItems(id='rds-groupby',
                            options=[{
                                "label": "None",
                                "value": "none"
@@ -91,11 +84,12 @@ class ReactionViewerApp(DashAppBase):
                                "label": "D3",
                                "value": "d3"
                            }],
-                           value="none"),
+                           value="none",
+                           inline=True),
             ]),
-            html.Div([
-            html.Label('Metric:'),
-            dcc.RadioItems(id='rds-metric',
+            dbc.Col([
+            dbc.Label('Metric:'),
+            dbc.RadioItems(id='rds-metric',
                            options=[{
                                "label": "UE",
                                "value": "UE"
@@ -103,11 +97,12 @@ class ReactionViewerApp(DashAppBase):
                                "label": "URE",
                                "value": "URE"
                            }],
-                           value="UE"),
+                           value="UE",
+                           inline=True),
             ]),
-            html.Div([
-            html.Label('Plot type:'),
-            dcc.RadioItems(id='rds-kind',
+            dbc.Col([
+            dbc.Label('Plot type:'),
+            dbc.RadioItems(id='rds-kind',
                            options=[{
                                "label": "Bar",
                                "value": "bar"
@@ -115,17 +110,32 @@ class ReactionViewerApp(DashAppBase):
                                "label": "Violin",
                                "value": "violin"
                            }],
-                           value="bar"),
+                           value="bar",
+                           inline=True),
             ]),
-        ],
-                 style={'columnCount': 2}),
+            dbc.Col([
+            dbc.Label('Counterpoise Correction:'),
+            dbc.RadioItems(id='rds-stoich',
+                           options=[{
+                               "label": "CP",
+                               "value": "cp"
+                           }, {
+                               "label": "noCP",
+                               "value": "default"
+                           }],
+                           value="cp",
+                           inline=True),
+            ]),
+        ]),
 
 
+        dbc.Card([
         dcc.Loading(
                 id="loading-1",
                 children=[dcc.Graph(id='primary-graph')],
                 type="default",
             )
+        ])
         # dcc.Graph(id='primary-graph')
     ],
     className='container')
@@ -155,8 +165,9 @@ class ReactionViewerApp(DashAppBase):
             Input('rds-groupby', 'value'),
             Input('rds-metric', 'value'),
             Input('rds-kind', 'value'),
+            Input('rds-stoich', 'value'),
         ])
-        def build_graph(dataset, method, basis, groupby, metric, kind):
+        def build_graph(dataset, method, basis, groupby, metric, kind, stoich):
 
             key = f"rd_df_dataset_cache_{dataset}"
             if cache.get(key) is not None:
@@ -171,7 +182,7 @@ class ReactionViewerApp(DashAppBase):
 
             if groupby == "none":
                 groupby = None
-            fig = ds.visualize(method=method, basis=basis, groupby=groupby, metric=metric, kind=kind, return_figure=True)
+            fig = ds.visualize(method=method, basis=basis, groupby=groupby, metric=metric, kind=kind, stoich=stoich, return_figure=True)
 
             cache.set(key, ds)
 
