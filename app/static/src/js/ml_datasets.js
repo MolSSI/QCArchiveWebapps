@@ -38,6 +38,31 @@ function format_details( data ) {
     return details;
 }
 
+function get_download_size(data) {
+    if (!data.view_url_hdf5 & !data.view_url_plaintext)
+        return;
+    var rec_url, text_url, hdf5_url;
+    text_url = data.view_url_plaintext? data.view_url_plaintext.split('/files/'): null;
+    hdf5_url = data.view_url_hdf5? data.view_url_hdf5.split('/files/'): null;
+
+    rec_url = text_url? text_url[0]: hdf5_url[0];
+    rec_url = rec_url.split('/record/')[1];
+    text_url = text_url? text_url[1].split('?')[0]: null;
+    hdf5_url = hdf5_url? hdf5_url[1].split('?')[0]: null;
+
+    var url = 'https://zenodo.org/api/records/' + rec_url;
+
+    console.log(url, text_url, hdf5_url);
+
+    var zenodo_rec = $.ajax({
+        url: url,
+        // timeout: 500,  // msec
+    }).done(function (ret) {
+        console.log(ret);
+    });
+
+}
+
 function format_buttons(data, type, row, meta){
 
     var buttons = $('.download_template').clone();
@@ -56,6 +81,8 @@ function format_buttons(data, type, row, meta){
     else {
         buttons.find('#text').attr('href', data.view_url_plaintext);
     }
+
+    // get_download_size(data);
 
     return buttons.html();
 }
@@ -85,6 +112,8 @@ function format_elements(data, type, row, meta, full){
 
     return out;
 }
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 $(document).ready( function () {
 
@@ -131,6 +160,19 @@ $(document).ready( function () {
             }
         ],
 
+        "drawCallback": function( settings ) {
+            $('[data-toggle="tooltip"]').tooltip({
+                template :
+                    '<div class="tooltip">' +
+                        '<div class="tooltip-arrow"></div>' +
+                        '<div class="tooltip-head">' +
+                            '<b><i class="fa fa-info-circle"></i> Download Size: </b>' +
+                        '</div>' +
+                        '<div class="tooltip-inner"></div>' +
+                    '</div>',
+                html: true,
+            });
+        },
 
         // dom: 'Bfrtip',
         // buttons: [
@@ -140,7 +182,7 @@ $(document).ready( function () {
     });
 
     $("div.toolbar").append(
-          '<a id="add_your_ds" href="#">Add your Dataset</a>'
+          '<a id="add_your_ds" href="#" data-toggle="tooltip" data-placement="top" title="click to download">Add your Dataset</a>'
         + '<a id="license" href="#">License</a>'
     );
 
