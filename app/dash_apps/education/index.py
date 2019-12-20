@@ -11,6 +11,7 @@ import six.moves.urllib.request as urlreq
 from six import PY3
 import json
 import qcedu as edu
+import os
 
 
 class EducationApp(DashAppBase):
@@ -20,8 +21,7 @@ class EducationApp(DashAppBase):
         # override default
         external_stylesheets = ['/static/dist/css/education.css',
                                 'https://fonts.googleapis.com/css?family=Lato',
-                                'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
-                                'https://codepen.io/chriddyp/pen/bWLwgP.css']
+                                'https://use.fontawesome.com/releases/v5.8.1/css/all.css']
         external_scripts = ['/static/dist/js/education.min.js']
 
         super().__init__(server, path,
@@ -31,19 +31,18 @@ class EducationApp(DashAppBase):
 
 
     def get_layout(self, dashapp):
-        model_data = urlreq.urlopen(
-            'https://raw.githubusercontent.com/plotly/dash-bio-docs-files/master/' +
-            'mol3d/model_data.js'
-        ).read()
 
-        styles_data = urlreq.urlopen(
-            'https://raw.githubusercontent.com/plotly/dash-bio-docs-files/master/' +
-            'mol3d/styles_data.js'
-        ).read()
+        path1 = os.path.abspath('.')
+        path2 = os.path.join(path1, 'app/static/src/js/education/model_data.js')
+        path3 = os.path.join(path1, 'app/static/src/js/education/styles_data.js')
 
-        if PY3:
-            model_data = model_data.decode('utf-8')
-            styles_data = styles_data.decode('utf-8')
+        model_data = open(path2).read()
+
+        styles_data = open(path3).read()
+
+        # if PY3:
+        #     model_data = model_data.decode('utf-8')
+        #     styles_data = styles_data.decode('utf-8')
 
         model_data = json.loads(model_data)
         styles_data = json.loads(styles_data)
@@ -62,9 +61,9 @@ class EducationApp(DashAppBase):
                         ], className='align-items-center', style={'padding-top': '70px'},  justify="center"),
                         dbc.Row([
                             dbc.Col(
-                                html.P(html.H2("Search by common name, scienfic name, or formula"), className='text-secondary text-center'),
+                                html.P(html.H5("Search by common name, scienfic name, or formula"), className='text-secondary text-center'),
                             ),
-                        ], className='align-items-center', style={'padding-top': '5px'})
+                        ], className='align-items-center pt-3')
                     ], className='container')
                 ], style={'background-image': 'url("https://mdbootstrap.com/img/Photos/Others/images/91.jpg")', 'height': '250px'}),
 
@@ -74,8 +73,7 @@ class EducationApp(DashAppBase):
                             edu.eduside(),
                                                 
                             width={"size": 3},
-                            style={'background-color':'white'},
-                            className='pl-0 pr-0',
+                            className='pl-0 pr-0 .bg-white',
                             ),
                         dbc.Col(
                             html.Div([
@@ -96,7 +94,7 @@ class EducationApp(DashAppBase):
                                     dbc.ListGroupItem(
                                         [
                                             dbc.ListGroupItemHeading([
-                                                html.P(html.H1("Information"), className='text-center')
+                                                html.P(html.H4("Information"), className='text-center')
                                                 
                                             ]),
                                         ]
@@ -105,12 +103,12 @@ class EducationApp(DashAppBase):
                                         [
                                             dbc.Row([
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P(html.H4("Molecular Formula:"), className='text-center')
+                                                    html.P(html.H6("Molecular Formula:"), className='text-center')
                                                 ]),
                                                     width={"size": 5},
                                                 ),
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P("H20", id="data1", className='text-center', style={'font-size': '12px'})
+                                                    html.P("H20", id="data1", className='text-center')
                                                 ]),
                                                     width={"size": 7},
                                                 ),
@@ -124,14 +122,14 @@ class EducationApp(DashAppBase):
                                                 dbc.Col(dbc.ListGroupItemText([
                                                     html.Br(),
                                                     html.Br(),
-                                                    html.P(html.H4("Chemical Names:"), className='text-center'),
+                                                    html.P(html.H6("Chemical Names:"), className='text-center'),
                                                 ]),
                                                     width={"size": 5},
                                                 ),
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P("water", className='text-center', style={'font-size': '12px'}),
-				                		            html.P("dihydrgen oxide", className='text-center', style={'font-size': '12px'}),
-				                		            html.P("purfied water", className='text-center', style={'font-size': '12px'}),
+                                                    html.P("water", className='text-center'),
+				                		            html.P("dihydrgen oxide", className='text-center'),
+				                		            html.P("purfied water", className='text-center'),
                                                 ]),
                                                     width={"size": 7},
                                                 ),
@@ -143,12 +141,12 @@ class EducationApp(DashAppBase):
                                         [
                                             dbc.Row([
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P(html.H4("Molecular Weight:"), className='text-center')
+                                                    html.P(html.H6("Molecular Weight:"), className='text-center')
                                                 ]),
                                                     width={"size": 5},
                                                 ),
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P("18.05 g/mol", className='text-center', style={'font-size': '12px'})
+                                                    html.P("18.05 g/mol", className='text-center')
                                                 ]),
                                                     width={"size": 7},
                                                 ),
@@ -160,37 +158,12 @@ class EducationApp(DashAppBase):
                                         [
                                             dbc.Row([
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P(html.H4("PubChem CID (?):"), className='text-center')
+                                                    html.P(html.H6("PubChem CID (?):"), className='text-center')
                                                 ]),
                                                     width={"size": 5},
                                                 ),
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P("962", className='text-center', style={'font-size': '12px'})
-                                                ]),
-                                                    width={"size": 7},
-                                                ),
-
-                                            ])
-                                        ]
-                                    ),
-                                    dbc.ListGroupItem(
-                                        [
-                                            dbc.Row([
-                                                dbc.Col(dbc.ListGroupItemText([
-                                                    html.Br(),
-                                                    html.Br(),
-                                                    html.Br(),
-                                                    html.P(html.H4("Physical Properties:"), className='text-center')
-                                                ]),
-                                                    width={"size": 5},
-                                                ),
-                                                dbc.Col(dbc.ListGroupItemText([
-                                                    html.P("clear", className='text-center', style={'font-size': '12px'}),
-				                		            html.P("colorless", className='text-center', style={'font-size': '12px'}),
-				                		            html.P("odorless", className='text-center', style={'font-size': '12px'}),
-				                		            html.P("tasteless", className='text-center', style={'font-size': '12px'}),
-				                		            html.P("freezes below 0 ℃", className='text-center', style={'font-size': '12px'}),
-				                		            html.P("boils above 100 ℃", className='text-center', style={'font-size': '12px'}),
+                                                    html.P("962", className='text-center')
                                                 ]),
                                                     width={"size": 7},
                                                 ),
@@ -203,14 +176,39 @@ class EducationApp(DashAppBase):
                                             dbc.Row([
                                                 dbc.Col(dbc.ListGroupItemText([
                                                     html.Br(),
-                                                    html.P(html.H4("Chemical Safety:"), className='text-center')
+                                                    html.Br(),
+                                                    html.Br(),
+                                                    html.P(html.H6("Physical Properties:"), className='text-center')
                                                 ]),
                                                     width={"size": 5},
                                                 ),
                                                 dbc.Col(dbc.ListGroupItemText([
-                                                    html.P((html.A(html.H4("Laboratory"), href='#')), className='text-center'),
-                                                    html.P((html.A(html.H4("Safety Summary"), href='#')), className='text-center'),
-                                                    html.P((html.A(html.H4("(LCSS) Datasheet"), href='#')), className='text-center'),
+                                                    html.P("clear", className='text-center'),
+				                		            html.P("colorless", className='text-center'),
+				                		            html.P("odorless", className='text-center'),
+				                		            html.P("tasteless", className='text-center'),
+				                		            html.P("freezes below 0 ℃", className='text-center'),
+				                		            html.P("boils above 100 ℃", className='text-center'),
+                                                ]),
+                                                    width={"size": 7},
+                                                ),
+
+                                            ])
+                                        ]
+                                    ),
+                                    dbc.ListGroupItem(
+                                        [
+                                            dbc.Row([
+                                                dbc.Col(dbc.ListGroupItemText([
+                                                    html.Br(),
+                                                    html.P(html.H6("Chemical Safety:"), className='text-center')
+                                                ]),
+                                                    width={"size": 5},
+                                                ),
+                                                dbc.Col(dbc.ListGroupItemText([
+                                                    html.P((html.A(html.H6("Laboratory"), href='#')), className='text-center'),
+                                                    html.P((html.A(html.H6("Safety Summary"), href='#')), className='text-center'),
+                                                    html.P((html.A(html.H6("(LCSS) Datasheet"), href='#')), className='text-center'),
                                                 ]),
                                                     width={"size": 7},
                                                 ),
@@ -225,6 +223,7 @@ class EducationApp(DashAppBase):
                             ),
                     ]),
                 ], className='container-fluid')
+
         ])
 
         return layout
