@@ -82,20 +82,20 @@ class ReactionViewerApp(DashAppBase):
         html.Div([
             dbc.Row([
                 dbc.Col(
-                    html.Div([
-                        html.Label('Groupby:'),
+                    dbc.FormGroup([
+                        dbc.Label('Groupby:'),
                         dbc.RadioItems(id='rds-groupby',
                            options=[{
                                "label": x.title(),
                                "value": x
                            } for x in ["method", "basis", "d3"]],
-                           value=None),
+                           value=None, custom=False),
                     ]),
                     className='md-4'
                 ),
                 dbc.Col(
-                    html.Div([
-                        html.Label('Metric:'),
+                    dbc.FormGroup([
+                        dbc.Label('Metric:'),
                         dbc.RadioItems(id='rds-metric', 
                            options=[{
                                "label": "UE",
@@ -104,13 +104,13 @@ class ReactionViewerApp(DashAppBase):
                                "label": "URE",
                                "value": "URE"
                            }],
-                           value="UE"),
+                           value="UE", custom=False),
                     ]),
                     className='md-4'
                 ),
                 dbc.Col(
-                    html.Div([
-                        html.Label('Plot type:'),
+                    dbc.FormGroup([
+                        dbc.Label('Plot type:'),
                         dbc.RadioItems(id='rds-kind',
                            options=[{
                                "label": "Bar",
@@ -119,7 +119,7 @@ class ReactionViewerApp(DashAppBase):
                                "label": "Violin",
                                "value": "violin"
                            }],
-                           value="bar"),
+                           value="bar", custom=False),
                     ]),
                     className='md-4'
                 )
