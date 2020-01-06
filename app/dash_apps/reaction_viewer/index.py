@@ -6,6 +6,7 @@ from dash.dependencies import Input, Output
 from ..dash_base import DashAppBase
 from ... import cache
 from .connection import get_client
+import dash_bootstrap_components as dbc
 
 
 def list_collections():
@@ -36,6 +37,13 @@ def get_history_values(name, category):
 class ReactionViewerApp(DashAppBase):
     """Create a Dash app."""
 
+    def __init__(self, server, path, **kwargs):
+        # override default
+        external_stylesheets = ['/static/dist/css/reactionViewer.css']
+
+        super().__init__(server, path,
+                        external_stylesheets=external_stylesheets)
+
     layout = html.Div(
     [
         dbc.Alert("The app is in a pre-alpha state and is for demonstration purposes only.", color="warning"),
@@ -54,42 +62,42 @@ class ReactionViewerApp(DashAppBase):
         #     dcc.Dropdown(id='available-rds', options=list_collections(), className='twelve columns'),
         # ],
         #          className='row'),
-        dbc.Row([
-            dbc.Col([dbc.Label("Choose a ReactionDataset:")], width=3),
-            dbc.Col([dcc.Dropdown(id='available-rds', options=list_collections(), value="S22")])
+        html.Div([
+            html.Div([
+                html.P('First select a reaction dataset to get started:'),
+                #     html.P('SELECT a drug in the dropdown to add it to the drug candidates at the bottom.')
+            ]),
+            dcc.Dropdown(id='available-rds', className='dropdown', options=list_collections(), value="S22"),
+            html.Div(id='rds-display-value'),
         ]),
-        dbc.Row([
-            dbc.Col([dbc.Label('Select methods to display:')], width=3),
-            dbc.Col([dcc.Dropdown(id='rds-available-methods', options=[], multi=True)]),
-        ]),
-        dbc.Row([
-            dbc.Col([dbc.Label('Select bases to display:')], width=3),
-            dbc.Col([dcc.Dropdown(id='rds-available-basis', options=[], multi=True)]),
+        html.Br(),
+        html.Div([
+            html.Label('Select methods to display:'),
+            dcc.Dropdown(id='rds-available-methods', className='dropdown', options=[], multi=True),
+            html.Br(),
+            html.Label('Select bases to display:'),
+            dcc.Dropdown(id='rds-available-basis', className='dropdown', options=[], multi=True),
             # multi=True,
         ]),
-        dbc.Row([
-            dbc.Col([
-            dbc.Label('Groupby:'),
-            dbc.RadioItems(id='rds-groupby',
+        html.Br(),
+        html.Div([
+            dbc.Row([
+                dbc.Col(
+                    html.Div([
+                        html.Label('Groupby:'),
+                        dcc.RadioItems(id='rds-groupby',
                            options=[{
-                               "label": "None",
-                               "value": "none"
-                           }, {
-                               "label": "Method",
-                               "value": "method"
-                           }, {
-                               "label": "Basis",
-                               "value": "basis"
-                           }, {
-                               "label": "D3",
-                               "value": "d3"
-                           }],
-                           value="none",
-                           inline=True),
-            ]),
-            dbc.Col([
-            dbc.Label('Metric:'),
-            dbc.RadioItems(id='rds-metric',
+                               "label": x.title(),
+                               "value": x
+                           } for x in ["method", "basis", "d3"]],
+                           value=None),
+                    ]),
+                    className='md-4'
+                ),
+                dbc.Col(
+                    html.Div([
+                        html.Label('Metric:'),
+                        dcc.RadioItems(id='rds-metric', 
                            options=[{
                                "label": "UE",
                                "value": "UE"
@@ -97,12 +105,14 @@ class ReactionViewerApp(DashAppBase):
                                "label": "URE",
                                "value": "URE"
                            }],
-                           value="UE",
-                           inline=True),
-            ]),
-            dbc.Col([
-            dbc.Label('Plot type:'),
-            dbc.RadioItems(id='rds-kind',
+                           value="UE"),
+                    ]),
+                    className='md-4'
+                ),
+                dbc.Col(
+                    html.Div([
+                        html.Label('Plot type:'),
+                        dcc.RadioItems(id='rds-kind',
                            options=[{
                                "label": "Bar",
                                "value": "bar"
@@ -110,33 +120,14 @@ class ReactionViewerApp(DashAppBase):
                                "label": "Violin",
                                "value": "violin"
                            }],
-                           value="bar",
-                           inline=True),
+                           value="bar"),
+                    ]),
+                    className='md-4'
+                )
             ]),
-            dbc.Col([
-            dbc.Label('Counterpoise Correction:'),
-            dbc.RadioItems(id='rds-stoich',
-                           options=[{
-                               "label": "CP",
-                               "value": "cp"
-                           }, {
-                               "label": "noCP",
-                               "value": "default"
-                           }],
-                           value="cp",
-                           inline=True),
-            ]),
+
         ]),
-
-
-        dbc.Card([
-        dcc.Loading(
-                id="loading-1",
-                children=[dcc.Graph(id='primary-graph')],
-                type="default",
-            )
-        ])
-        # dcc.Graph(id='primary-graph')
+        dcc.Graph(id='primary-graph')
     ],
     className='container')
 
