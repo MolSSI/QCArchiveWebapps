@@ -84,7 +84,7 @@ class ReactionViewerApp(DashAppBase):
                 dbc.Col(
                     html.Div([
                         html.Label('Groupby:'),
-                        dcc.RadioItems(id='rds-groupby',
+                        dbc.RadioItems(id='rds-groupby',
                            options=[{
                                "label": x.title(),
                                "value": x
@@ -96,7 +96,7 @@ class ReactionViewerApp(DashAppBase):
                 dbc.Col(
                     html.Div([
                         html.Label('Metric:'),
-                        dcc.RadioItems(id='rds-metric', 
+                        dbc.RadioItems(id='rds-metric', 
                            options=[{
                                "label": "UE",
                                "value": "UE"
@@ -111,7 +111,7 @@ class ReactionViewerApp(DashAppBase):
                 dbc.Col(
                     html.Div([
                         html.Label('Plot type:'),
-                        dcc.RadioItems(id='rds-kind',
+                        dbc.RadioItems(id='rds-kind',
                            options=[{
                                "label": "Bar",
                                "value": "bar"
