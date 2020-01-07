@@ -82,50 +82,75 @@ class ReactionViewerApp(DashAppBase):
         html.Div([
             dbc.Row([
                 dbc.Col(
+                    # dbc.FormGroup([
+                    #     dbc.Label('Groupby:'),
+                    #     dbc.RadioItems(id='rds-groupby',
+                    #        options=[{
+                    #            "label": x.title(),
+                    #            "value": x
+                    #        } for x in ["method", "basis", "d3"]],
+                    #        value=None, custom=False),
+                    # ]),
                     dbc.FormGroup([
                         dbc.Label('Groupby:'),
-                        dbc.RadioItems(id='rds-groupby',
-                           options=[{
-                               "label": x.title(),
-                               "value": x
-                           } for x in ["method", "basis", "d3"]],
-                           value=None, custom=False),
+                        html.Br(),
+                        dbc.DropdownMenu([
+                            dbc.DropdownMenuItem("method"),
+                            dbc.DropdownMenuItem("basis"),
+                            dbc.DropdownMenuItem("d3")],
+                            label="method",
+                            group=True,
+                            id='rds-groupby',
+                        ),
                     ]),
                     className='md-4'
                 ),
                 dbc.Col(
                     dbc.FormGroup([
                         dbc.Label('Metric:'),
-                        dbc.RadioItems(id='rds-metric', 
-                           options=[{
-                               "label": "UE",
-                               "value": "UE"
-                           }, {
-                               "label": "URE",
-                               "value": "URE"
-                           }],
-                           value="UE", custom=False),
-                    ]),
+                        html.Br(),
+                         dbc.ButtonGroup([
+                            dbc.Button("UE"), 
+                            dbc.Button("URE")
+                        ])
+                        # dbc.RadioItems(id='rds-metric', 
+                        #    options=[{
+                        #        "label": "UE",
+                        #        "value": "UE"
+                        #    }, {
+                        #        "label": "URE",
+                        #        "value": "URE"
+                        #    }],
+                        #    value="UE", custom=False),
+                    ], id='rds-metric'),
                     className='md-4'
                 ),
                 dbc.Col(
+                    # dbc.FormGroup([
+                    #     dbc.Label('Plot type:'),
+                    #     dbc.RadioItems(id='rds-kind',
+                    #        options=[{
+                    #            "label": "Bar",
+                    #            "value": "bar"
+                    #        }, {
+                    #            "label": "Violin",
+                    #            "value": "violin"
+                    #        }],
+                    #        value="bar", custom=False),
+                    # ]),
                     dbc.FormGroup([
                         dbc.Label('Plot type:'),
-                        dbc.RadioItems(id='rds-kind',
-                           options=[{
-                               "label": "Bar",
-                               "value": "bar"
-                           }, {
-                               "label": "Violin",
-                               "value": "violin"
-                           }],
-                           value="bar", custom=False),
-                    ]),
+                        html.Br(),
+                        dbc.ButtonGroup([
+                            dbc.Button("Bar"), 
+                            dbc.Button("Violin")
+                            ])
+                     ], id='rds-kind'),
                     className='md-4'
                 )
             ]),
 
-        ]),
+    ]),
         dcc.Graph(id='primary-graph')
     ],
     className='container')
