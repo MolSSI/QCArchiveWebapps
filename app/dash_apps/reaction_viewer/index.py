@@ -148,7 +148,22 @@ class ReactionViewerApp(DashAppBase):
                             ])
                      ], id='rds-kind'),
                     className='md-4'
-                )
+                ),
+
+                dbc.Col([
+                    dbc.Label('Counterpoise Correction:'),
+                    dbc.RadioItems(id='rds-stoich',
+                                   options=[{
+                                       "label": "CP",
+                                       "value": "cp"
+                                   }, {
+                                       "label": "noCP",
+                                       "value": "default"
+                                   }],
+                                   value="cp",
+                                   inline=True),
+                    ]),
+
             ]),
 
     ]),
