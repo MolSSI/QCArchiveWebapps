@@ -148,6 +148,7 @@ class ReactionViewerApp(DashAppBase):
                             ])
                      ], id='rds-kind'),
                     className='md-4'
+<<<<<<< HEAD
                 ),
 
                 dbc.Col([
@@ -164,6 +165,9 @@ class ReactionViewerApp(DashAppBase):
                                    inline=True),
                     ]),
 
+=======
+                )
+>>>>>>> 948d6f620bc256d1e678949fecba4c3c1b5e7f63
             ]),
 
     ]),
