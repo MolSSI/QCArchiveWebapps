@@ -18,7 +18,7 @@ def get_history_values(name, category):
 
     ds = client.get_collection("reactiondataset", name)
 
-    methods = ds.list_history().reset_index()[category].unique()
+    methods = ds.list_values().reset_index()[category].unique()
     if category == "method":
         return [{"label": k.upper(), "value": k} for k in methods]
     else:
@@ -141,7 +141,7 @@ def callbacks(dashapp):
         client = get_client()
 
         ds = client.get_collection("reactiondataset", dataset)
-        history = ds.list_history(method=method, basis=basis)
+        history = ds.list_values(method=method, basis=basis)
         if (method is None) or (basis is None):
             print("")
             return {}

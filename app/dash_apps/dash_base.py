@@ -1,5 +1,6 @@
 from dash import Dash
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 from abc import ABC, abstractmethod
 
@@ -7,10 +8,11 @@ from abc import ABC, abstractmethod
 class DashAppBase(ABC):
 
     # defaults
-    external_stylesheets = [
-        'https://codepen.io/chriddyp/pen/bWLwgP.css',
-        'https://cdn.rawgit.com/plotly/dash-app-stylesheets/0e463810ed36927caf20372b6411690692f94819/dash-drug-discovery-demo-stylesheet.css'
-    ]
+    # external_stylesheets = [
+    #     'https://codepen.io/chriddyp/pen/bWLwgP.css',
+    #     'https://cdn.rawgit.com/plotly/dash-app-stylesheets/0e463810ed36927caf20372b6411690692f94819/dash-drug-discovery-demo-stylesheet.css'
+    # ]
+    external_stylesheets = [dbc.themes.BOOTSTRAP]
     external_scripts = ['/static/dist/js/includes/jquery.min.js',
                         '/static/dist/js/main.min.js']
 

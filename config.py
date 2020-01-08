@@ -141,5 +141,5 @@ config = {
     'docker': DockerConfig,
     'unix': UnixConfig,
 
-    'default': DevelopmentConfig
+    'default': DevelopmentConfig,
 }

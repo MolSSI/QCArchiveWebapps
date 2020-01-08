@@ -38,6 +38,7 @@ webencodings
 Werkzeug
 WTForms
 dash
+dash-bootstrap-components
 pandas
 Flask-Caching
 Flask-Cors
