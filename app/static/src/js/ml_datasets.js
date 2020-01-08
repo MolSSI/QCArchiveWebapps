@@ -73,6 +73,7 @@ function format_buttons(data, type, row, meta){
     }
     else {
         buttons.find('#hdf5').attr('href', data.view_url_hdf5);
+        buttons.find('#hdf5').attr('title', data.hdf5_size + ' MB');
     }
 
     if (!data.view_url_plaintext) {
@@ -80,10 +81,9 @@ function format_buttons(data, type, row, meta){
     }
     else {
         buttons.find('#text').attr('href', data.view_url_plaintext);
+        buttons.find('#text').attr('title', data.plaintext_size + ' MB');
     }
-
-    // get_download_size(data);
-
+    
     return buttons.html();
 }
 
@@ -182,7 +182,7 @@ $(document).ready( function () {
     });
 
     $("div.toolbar").append(
-          '<a id="add_your_ds" href="#" data-toggle="tooltip" data-placement="top" title="click to download">Add your Dataset</a>'
+          '<a id="add_your_ds" href="#">Add your Dataset</a>'
         + '<a id="license" href="#">License</a>'
     );
 
