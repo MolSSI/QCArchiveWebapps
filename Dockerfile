@@ -5,6 +5,9 @@ LABEL MAINTAINER="Doaa Altarawy <doaa.altarawy@gmail.com>"
 
 ENV GROUP_ID=1000 \
     USER_ID=1000
+#    GIT_COMMIT=$(git rev-parse --short=8 HEAD)
+# use in sh file to tag images and push them to registery
+# not tested to work here
 
 WORKDIR /var/www/
 
