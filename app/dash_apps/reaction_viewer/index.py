@@ -39,7 +39,8 @@ class ReactionViewerApp(DashAppBase):
 
     def __init__(self, server, path, **kwargs):
         # override default
-        external_stylesheets = ['/static/dist/css/reactionViewer.css']
+        external_stylesheets = ['/static/src/scss/education/style.css']
+
 
         super().__init__(server, path,
                         external_stylesheets=external_stylesheets)
@@ -167,6 +168,7 @@ class ReactionViewerApp(DashAppBase):
             ]),
 
     ]),
+
         dcc.Graph(id='primary-graph')
     ],
     className='container')
