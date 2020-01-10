@@ -39,6 +39,11 @@ function format_details( data ) {
 }
 
 function get_download_size(data) {
+    /**
+     * Placeholder until Zenodo update their APIs to get the size
+     * efficiently
+     */
+    
     if (!data.view_url_hdf5 & !data.view_url_plaintext)
         return;
     var rec_url, text_url, hdf5_url;

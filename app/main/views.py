@@ -122,10 +122,10 @@ def _get_qcarchive_collections():
         if r['view_metadata']:  # add metadata attributes
             r.update(r.pop("view_metadata"))
             # sizes from bytes to MB
-            r['plaintext_size'] = int(r['plaintext_size']) // 1024
+            r['plaintext_size'] = int(r['plaintext_size']) // 1024**2
             r['plaintext_size'] = f'{r["plaintext_size"]:,}'
 
-            r['hdf5_size'] = int(r['hdf5_size']) // 1024
+            r['hdf5_size'] = int(r['hdf5_size']) // 1024**2
             r['hdf5_size'] = f'{r["hdf5_size"]:,}'
 
         data.append(r)
