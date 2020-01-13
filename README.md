@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.com/MolSSI/QCArchive_website.svg?token=66tFeohM6UiDzZMw65q9&branch=master)](https://travis-ci.com/MolSSI/QCArchive_website)
-[![codecov](https://codecov.io/gh/MolSSI/QCArchive_website/branch/master/graph/badge.svg?token=xPgDkNsfxk)](https://codecov.io/gh/MolSSI/QCArchive_website)
+[![Build Status](https://travis-ci.com/MolSSI/QCArchive_webapps.svg?token=66tFeohM6UiDzZMw65q9&branch=master)](https://travis-ci.com/MolSSI/QCArchive_webapps)
+[![codecov](https://codecov.io/gh/MolSSI/QCArchive_webapps/branch/master/graph/badge.svg?token=xPgDkNsfxk)](https://codecov.io/gh/MolSSI/QCArchive_webapps)
 
 QCArchive Website Webapps
 ========================
