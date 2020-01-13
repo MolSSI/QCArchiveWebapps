@@ -54,9 +54,16 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    DEBUG = False
     # SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
     #     'sqlite://'
     WTF_CSRF_ENABLED = False
+    EMAIL_CONFIRMATION_ENABLED = True
+    # disable CSRF protection in testing
+    WTF_CSRF_ENABLED = False
+    MONGODB_SETTINGS = {
+        'db': "test_qca_db",
+    }
 
 
 class ProductionConfig(Config):
