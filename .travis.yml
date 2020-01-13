@@ -5,11 +5,13 @@ language: python
 sudo: true
 dist: xenial
 
+services:
+  - mongodb
+
 matrix:
   include:
       - python: 3.6
       - python: 3.7
-
 
 before_install:
   - uname -a
@@ -22,11 +24,15 @@ install:
   - sudo apt-get install npm
   - sudo npm install
   - pip install -r requirements/travis.txt
+  - pip install pytest-cov codecov
 
 before_script:
+  - sleep 15    # fixes an issue with travis,
+                # MongoDB does not accept connections immediately.
+  - mongo test_qca_db --eval ';' # --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
 
 script:
-  - flask test --coverage
+  - pytest -v --cov=app/ --durations=5
 
 notifications:
   email: false

@@ -1,62 +1,42 @@
-import re
-import unittest
-from app import create_app, db
-from app.models import User, Role
+import json
+from base64 import b64encode
+from app.models.users import User
+from app.models.logs import Log
+import pytest
 
-class FlaskClientTestCase(unittest.TestCase):
-    def setUp(self):
-        self.app = create_app('testing')
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-        db.create_all()
-        Role.insert_roles()
-        self.client = self.app.test_client(use_cookies=True)
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
-        self.app_context.pop()
+def get_api_headers(username, password):
+    return {
+        'Authorization': 'Basic ' + b64encode(
+            (username + ':' + password).encode('utf-8')).decode('utf-8'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
 
-    def test_home_page(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('Stranger' in response.get_data(as_text=True))
+def test_404(flask_test_client):
+    response = flask_test_client.get('/wrong/url')
+    assert response.status_code == 404
+    assert r'Not Found' in response.get_data(as_text=True)
 
-    def test_register_and_login(self):
-        # register a new account
-        response = self.client.post('/auth/register', data={
-            'email': 'john@example.com',
-            'username': 'john',
-            'password': 'cat',
-            'password2': 'cat'
-        })
-        self.assertEqual(response.status_code, 302)
+def test_home(flask_test_client):
 
-        # login with the new account
-        response = self.client.post('/auth/login', data={
-            'email': 'john@example.com',
-            'password': 'cat'
-        }, follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(re.search('Hello,\s+john!',
-                                  response.get_data(as_text=True)))
-        self.assertTrue(
-            'You have not confirmed your account yet' in response.get_data(
-                as_text=True))
+    response = flask_test_client.get('/')
+    assert response.status_code == 200
 
-        # send a confirmation token
-        user = User.query.filter_by(email='john@example.com').first()
-        token = user.generate_confirmation_token()
-        response = self.client.get('/auth/confirm/{}'.format(token),
-                                   follow_redirects=True)
-        user.confirm(token)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(
-            'You have confirmed your account' in response.get_data(
-                as_text=True))
+def test_ml_datasets_app(flask_test_client):
 
-        # log out
-        response = self.client.get('/auth/logout', follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('You have been logged out' in response.get_data(
-            as_text=True))
+    response = flask_test_client.get('/ml_datasets', follow_redirects=True)
+    assert response.status_code == 200
+
+def test_reaction_dataset_app(flask_test_client):
+
+    response = flask_test_client.get('/reaction_viewer', follow_redirects=True)
+    assert response.status_code == 200
+
+
+@pytest.mark.skip
+def test_education_app(flask_test_client):
+
+    response = flask_test_client.get('/education', follow_redirects=True)
+    assert response.status_code == 200
+
