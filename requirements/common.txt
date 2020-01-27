@@ -1,4 +1,4 @@
-alembic
+#alembic
 bleach
 blinker
 click
@@ -12,7 +12,7 @@ Flask-Mail
 #Flask-Migrate
 Flask-Moment
 Flask-PageDown
-Flask-SQLAlchemy
+# Flask-SQLAlchemy
 Flask-WTF
 Flask_Assets
 html5lib
