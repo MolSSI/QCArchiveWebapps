@@ -10,7 +10,7 @@ coverage:
   status:
     patch: false
 
-  range: 80..90     # First number represents red, and second represents green
+  range: 60..80     # First number represents red, and second represents green
                     # (default is 70..100)
   round: nearest    # up, down, or nearest
   precision: 2      # Number of decimal places, between 0 and 5
@@ -29,4 +29,4 @@ ignore:
 # Diff is the Coverage Diff of the pull request.
 # Files are the files impacted by the pull request
 comment:
-  layout: diff, files  # accepted in any order: reach, diff, flags, and/or files
+  layout: "header"  # accepted in any order: reach, diff, flags, and/or files
