@@ -44,18 +44,11 @@ class ReactionViewerApp(DashAppBase):
                 "The app is in a pre-alpha state and is for demonstration purposes only.",
                 color="warning",
             ),
-            # Header
+
+            ### Header
             dbc.Row([dbc.Col([html.H3("Reaction Dataset Viewer")])]),
-            # Main selection tool
-            # html.Div([
-            #     html.Div([
-            #         html.P('HOVER over a drug in the graph to the right to see its structure to the left.'),
-            #         html.P('SELECT a drug in the dropdown to add it to the drug candidates at the bottom.')
-            #     ],
-            #              style={'margin-left': '10px'}),
-            #     dcc.Dropdown(id='available-rds', options=list_collections(), className='twelve columns'),
-            # ],
-            #          className='row'),
+
+            ### Main selectors
             dbc.Row(
                 [
                     dbc.Col([dbc.Label("Choose a ReactionDataset:")], width=3),
@@ -91,21 +84,37 @@ class ReactionViewerApp(DashAppBase):
                     # multi=True,
                 ]
             ),
+
+            ### Radio Options
             dbc.Row(
                 [
                     dbc.Col(
                         [
                             dbc.Label("Groupby:"),
+                            # dbc.ButtonGroup(
+                            #    [
+                            #        dbc.Button("None", color="primary", active=True),
+                            #        dbc.Button("Method", color="primary"),
+                            #        dbc.Button("Basis", color="primary"),
+                            #        dbc.Button("D3", color="primary"),
+                            #    ]
+                            # ),
                             dbc.RadioItems(
-                                id="rds-groupby",
-                                options=[
-                                    {"label": "None", "value": "none"},
-                                    {"label": "Method", "value": "method"},
-                                    {"label": "Basis", "value": "basis"},
-                                    {"label": "D3", "value": "d3"},
-                                ],
-                                value="none",
-                                inline=True,
+                               id="rds-groupby",
+                               options=[
+                                   {"label": "None", "value": "none"},
+                                   {"label": "Method", "value": "method"},
+                                   {"label": "Basis", "value": "basis"},
+                                   {"label": "D3", "value": "d3"},
+                               ],
+                               # className="btn-group btn-group-toggle",
+                               # inputClassName="form-check-input",
+                               # labelClassName="btn btn-primary form-check-label",
+                               # labelCheckedClassName="active",
+                               # custom=False,
+                               switch=True,
+                               value="none",
+                               # inline=True,
                             ),
                         ]
                     ),
@@ -119,7 +128,8 @@ class ReactionViewerApp(DashAppBase):
                                     {"label": "URE", "value": "URE"},
                                 ],
                                 value="UE",
-                                inline=True,
+                                switch=True,
+                                # inline=True,
                             ),
                         ]
                     ),
@@ -133,7 +143,8 @@ class ReactionViewerApp(DashAppBase):
                                     {"label": "Violin", "value": "violin"},
                                 ],
                                 value="bar",
-                                inline=True,
+                                # inline=True,
+                                switch=True,
                             ),
                         ]
                     ),
@@ -147,12 +158,15 @@ class ReactionViewerApp(DashAppBase):
                                     {"label": "noCP", "value": "default"},
                                 ],
                                 value="cp",
-                                inline=True,
+                                # inline=True,
+                                switch=True,
                             ),
                         ]
                     ),
                 ]
             ),
+
+            ### Primary data visualizer
             dbc.Card(
                 [
                     dcc.Loading(
@@ -215,6 +229,7 @@ class ReactionViewerApp(DashAppBase):
 
             if groupby == "none":
                 groupby = None
+
             fig = ds.visualize(
                 method=method,
                 basis=basis,
