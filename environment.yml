@@ -7,4 +7,4 @@ dependencies:
   - pip=19.3
 #  - nodejs    # 110 MB  
   - pip:
-    - -r _requirements.txt
+    - -r requirements.txt
