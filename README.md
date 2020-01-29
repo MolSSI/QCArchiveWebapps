@@ -19,6 +19,13 @@ conda activate qca_web
 pip install -r requirements/dev.txt
 ```
 
+Or use conda env:
+
+```bash
+conda env create -f environment.yml 
+conda activate qca_env
+```
+
 ### Install JavaScript requirements:
 
 Next, install Node (front-end), and install JS requirements, 

@@ -45,4 +45,4 @@ Flask-Cors
 Flask_Mongoengine
 Flask_Admin
 geoip2
-qcportal==0.12.*
+qcportal==0.13.*
