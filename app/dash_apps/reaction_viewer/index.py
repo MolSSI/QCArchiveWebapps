@@ -46,12 +46,12 @@ class ReactionViewerApp(DashAppBase):
             ),
 
             ### Header
-            dbc.Row([dbc.Col([html.H3("Reaction Dataset Viewer")])]),
+            dbc.Row([dbc.Col([html.H3("Benchmark Dataset Viewer")])]),
 
             ### Main selectors
             dbc.Row(
                 [
-                    dbc.Col([dbc.Label("Choose a ReactionDataset:")], width=3),
+                    dbc.Col([dbc.Label("Choose a dataset:")], width=3),
                     dbc.Col(
                         [
                             dcc.Dropdown(
@@ -90,7 +90,7 @@ class ReactionViewerApp(DashAppBase):
                 [
                     dbc.Col(
                         [
-                            dbc.Label("Groupby:"),
+                            dbc.Label("Group by:"),
                             # dbc.ButtonGroup(
                             #    [
                             #        dbc.Button("None", color="primary", active=True),
@@ -150,7 +150,7 @@ class ReactionViewerApp(DashAppBase):
                     ),
                     dbc.Col(
                         [
-                            dbc.Label("Counterpoise Correction:"),
+                            dbc.Label("Counterpoise correction:"),
                             dbc.RadioItems(
                                 id="rds-stoich",
                                 options=[
