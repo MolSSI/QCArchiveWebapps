@@ -98,6 +98,9 @@ def register_dashapps(flask_server):
     from .dash_apps.reaction_viewer.index import ReactionViewerApp
     ReactionViewerApp(flask_server, '/reaction_viewer/')
 
+    from .dash_apps.qc_time_estimator.index import QCTimeEstimatorApp
+    QCTimeEstimatorApp(flask_server, '/qc_time_estimator/')
+
     from .dash_apps.reaction_viewer_mulipage.index import ReactionViewerAppMuli
     ReactionViewerAppMuli(flask_server, '/reaction_multi/')
 
