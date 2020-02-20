@@ -14,7 +14,7 @@ How to run and use for development:
 Run in shell, create python env, and install requirements:
 
 ```bash
-conda create -n qca_web pip
+conda create -n qca_web -c rdkit rdkit pip
 conda activate qca_web
 pip install -r requirements/dev.txt
 ```

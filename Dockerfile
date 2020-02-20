@@ -14,6 +14,9 @@ WORKDIR /var/www/
 ADD ./requirements/. /var/www/requirements/
 ADD ./package.json /var/www/package.json
 
+RUN conda create -n qca_web -c rdkit rdkit \
+    && conda activate qca_web
+
 # what's only needed for continuumio/miniconda3
 RUN pip install --upgrade pip
     && pip install --no-cache-dir -r requirements/docker.txt \
