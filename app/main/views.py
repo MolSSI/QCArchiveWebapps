@@ -43,6 +43,7 @@ def index():
         {'name': 'Education App', 'link': '/education/'},
         {'name': 'Machine Learning Datasets', 'link': '/ml_datasets/'},
         {'name': 'Reaction Viewer', 'link': '/reaction_viewer/'},
+        {'name': 'QC Execution Time Estimator', 'link': '/qc_time_estimator/'},
         {'name': 'App inside an iFrame', 'link': '/app_in_iframe/'},
         {'name': 'Example Dash with different style', 'link': '/dash_example/'},
         {'name': 'App with multiple pages', 'link': '/reaction_multi/'},
