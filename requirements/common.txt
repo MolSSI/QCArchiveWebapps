@@ -46,7 +46,6 @@ Flask_Mongoengine
 Flask_Admin
 geoip2
 qcportal==0.13.*
-git+https://github.com/MolSSI/QCElemental.git@master#egg=qcelemental
 git+https://github.com/MolSSI/ml_models_deploy.git@master#egg=qc_time_estimator&subdirectory=models/qc_time_estimator
 rdkit
 qcelemental>=0.13.1
