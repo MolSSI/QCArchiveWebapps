@@ -10,7 +10,6 @@ from .connection import get_client
 
 def list_collections():
     client = get_client()
-    collections = client.list_collections("reactiondataset")
 
     names = list(client.list_collections("reactiondataset").reset_index()["name"])
     return [{"label": k, "value": k} for k in names]
@@ -28,7 +27,7 @@ def get_history_values(name, category):
 
     ds = get_collection(name)
 
-    methods = ds.list_values().reset_index()[category].unique()
+    methods = ds.list_values(native=True).reset_index()[category].unique()
     if category == "method":
         return [{"label": k.upper(), "value": k} for k in methods]
     else:
@@ -222,7 +221,6 @@ class ReactionViewerApp(DashAppBase):
             else:
                 ds = get_collection(dataset)
 
-            history = ds.list_values(method=method, basis=basis)
             if (method is None) or (basis is None):
                 print("")
                 return {}
