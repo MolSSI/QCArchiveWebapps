@@ -2,10 +2,11 @@ from dash import Dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from ..dash_base import DashAppBase
 from ... import cache
 from .connection import get_client
+from dash.exceptions import PreventUpdate
 
 
 def list_collections():
@@ -43,10 +44,8 @@ class ReactionViewerApp(DashAppBase):
                 "The app is in a pre-alpha state and is for demonstration purposes only.",
                 color="warning",
             ),
-
             ### Header
             dbc.Row([dbc.Col([html.H3("Benchmark Dataset Viewer")])]),
-
             ### Main selectors
             dbc.Row(
                 [
@@ -83,7 +82,6 @@ class ReactionViewerApp(DashAppBase):
                     # multi=True,
                 ]
             ),
-
             ### Radio Options
             dbc.Row(
                 [
@@ -99,21 +97,21 @@ class ReactionViewerApp(DashAppBase):
                             #    ]
                             # ),
                             dbc.RadioItems(
-                               id="rds-groupby",
-                               options=[
-                                   {"label": "None", "value": "none"},
-                                   {"label": "Method", "value": "method"},
-                                   {"label": "Basis", "value": "basis"},
-                                   {"label": "D3", "value": "d3"},
-                               ],
-                               # className="btn-group btn-group-toggle",
-                               # inputClassName="form-check-input",
-                               # labelClassName="btn btn-primary form-check-label",
-                               # labelCheckedClassName="active",
-                               # custom=False,
-                               switch=True,
-                               value="none",
-                               # inline=True,
+                                id="rds-groupby",
+                                options=[
+                                    {"label": "None", "value": "none"},
+                                    {"label": "Method", "value": "method"},
+                                    {"label": "Basis", "value": "basis"},
+                                    {"label": "D3", "value": "d3"},
+                                ],
+                                # className="btn-group btn-group-toggle",
+                                # inputClassName="form-check-input",
+                                # labelClassName="btn btn-primary form-check-label",
+                                # labelCheckedClassName="active",
+                                # custom=False,
+                                switch=True,
+                                value="none",
+                                # inline=True,
                             ),
                         ]
                     ),
@@ -164,7 +162,6 @@ class ReactionViewerApp(DashAppBase):
                     ),
                 ]
             ),
-
             ### Primary data visualizer
             dbc.Card(
                 [
@@ -241,3 +238,25 @@ class ReactionViewerApp(DashAppBase):
             cache.set(key, ds)
 
             return fig
+
+        @dashapp.callback(
+            [Output("rds-stoich", "options"), Output("rds-stoich", "value")],
+            [Input("available-rds", "value")],
+            [State("rds-stoich", "value")],
+        )
+        def toggle_counterpoise(dataset, current_stoich):
+            ds = get_collection(dataset)
+
+            if "cp" in ds.valid_stoich():
+                return (
+                    [
+                        {"label": "CP", "value": "cp"},
+                        {"label": "noCP", "value": "default"},
+                    ],
+                    current_stoich,
+                )
+            else:
+                return (
+                    [{"label": "N/A", "value": "default", "disabled": True},],
+                    "default",
+                )
