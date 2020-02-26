@@ -14,11 +14,10 @@ WORKDIR /var/www/
 ADD ./requirements/. /var/www/requirements/
 ADD ./package.json /var/www/package.json
 
-RUN conda create -n qca_web -c rdkit rdkit \
-    && conda activate qca_web
 
 # what's only needed for continuumio/miniconda3
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip \
+    && conda install -c rdkit rdkit \
     && pip install --no-cache-dir -r requirements/docker.txt \
     && pip install --no-cache-dir gunicorn \
     && conda clean -y --all \
@@ -43,7 +42,8 @@ EXPOSE 5000
 # Run in Exec form, can't be overriden
 ENTRYPOINT [ "gunicorn", "--bind", "0.0.0.0:5000", "qcarchive_web:app"]
 # Params to pass to ENTRYPOINT, and can be overriden when running containers
-CMD ["-w", "1", "--access-logfile", "access.log", "--error-logfile", "error.log"]
+#CMD ["-w", "1", "--access-logfile", "access.log", "--error-logfile", "error.log"]
+CMD ["-w", "1", "--access-logfile", "-", "--error-logfile", "-"]
 
 # can't override ENTRYPOINT shell form
 #ENTRYPOINT gunicorn --bind :5000 --access-logfile - --error-logfile - qcarchive_web:app
