@@ -5,14 +5,29 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from ..dash_base import DashAppBase
 from ... import cache
-from .connection import get_client
 from qc_time_estimator.processing.input_utils.categorical_data import list_basis_sets
 from qc_time_estimator.predict import make_prediction
+from qc_time_estimator.processing.data_management import curr_model_exists
+from qc_time_estimator.train_pipeline import run_training
 from qcelemental.models import DriverEnum
+import threading
 import logging
 import natural.date
 
+
 logger = logging.getLogger(__name__)
+
+
+def create_model():
+    # Create the model only if doesn't exist
+    # will download data from zenodo if the data file doesn't exist
+    run_training(overwrite=False)
+
+
+# TODO: make sure it's called once, Dash makes multiple calls
+if not curr_model_exists():
+    logger.info("--- Calling create model")
+    threading.Thread(target=create_model).start()
 
 
 @cache.memoize()
@@ -221,6 +236,10 @@ class QCTimeEstimatorApp(DashAppBase):
             for k, v in data.items():
                 if v is None:
                     return ['', '', True]
+
+            if not curr_model_exists():
+                return ['(running model training, please try again later)', '', False]
+
             try:
                 ret = make_prediction(input_data=[data])
                 return [natural.date.compress(ret['predictions'][0]*3600), ret['version'], False]
