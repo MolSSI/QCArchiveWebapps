@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 @auth.before_app_request
 def before_request():
-    logger.debug('current_user is: %s', current_user)
     if current_user.is_authenticated:
+        logger.debug('current_user is: %s', current_user)
         if not current_user.confirmed and current_app.config['EMAIL_CONFIRMATION_ENABLED'] \
                 and request.endpoint \
                 and request.blueprint != 'auth' \
