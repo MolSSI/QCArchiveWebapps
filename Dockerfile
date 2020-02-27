@@ -33,7 +33,7 @@ ADD . /var/www/
 RUN groupadd -g $GROUP_ID www  && \
     useradd -r -g www -s /bin/sh -u $USER_ID www  && \
     chown -R www:www /var/www  && \
-    chown -R www:www /opt/conda/lib/python*/site-packages
+    chown -R www:www /opt/conda/lib/python*/site-packages/qc_time_estimator
 
 USER www
 
@@ -45,8 +45,8 @@ EXPOSE 5000
 # Run in Exec form, can't be overriden
 ENTRYPOINT [ "gunicorn", "--bind", "0.0.0.0:5000", "qcarchive_web:app"]
 # Params to pass to ENTRYPOINT, and can be overriden when running containers
-#CMD ["-w", "1", "--access-logfile", "access.log", "--error-logfile", "error.log"]
-CMD ["-w", "1", "--access-logfile", "-", "--error-logfile", "-"]
+CMD ["-w", "4", "--access-logfile", "access.log", "--error-logfile", "error.log"]
+#CMD ["-w", "1", "--access-logfile", "-", "--error-logfile", "-"]
 
 # can't override ENTRYPOINT shell form
 #ENTRYPOINT gunicorn --bind :5000 --access-logfile - --error-logfile - qcarchive_web:app
