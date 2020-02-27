@@ -7,7 +7,7 @@ from ..dash_base import DashAppBase
 from ... import cache
 from qc_time_estimator.processing.input_utils.categorical_data import list_basis_sets
 from qc_time_estimator.predict import make_prediction
-from qc_time_estimator.processing.data_management import curr_model_exists
+from qc_time_estimator.processing.data_management import current_model_exists
 from qc_time_estimator.train_pipeline import run_training
 from qcelemental.models import DriverEnum
 import threading
@@ -38,7 +38,7 @@ class QCTimeEstimatorApp(DashAppBase):
     def __init__(self, *args, **kwargs):
 
         # Run async
-        if not curr_model_exists():
+        if not current_model_exists():
             logger.info("--- Calling create model")
             threading.Thread(target=create_model).start()
 
@@ -240,7 +240,7 @@ class QCTimeEstimatorApp(DashAppBase):
                 if v is None:
                     return ['', '', True]
 
-            if not curr_model_exists():
+            if not current_model_exists():
                 return ['(running model training, please try again later)', '', False]
 
             try:
