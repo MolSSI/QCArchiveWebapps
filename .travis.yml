@@ -19,11 +19,14 @@ before_install:
   - df -h
   - pip -V
   - ulimit -a
+  # Setup python conda
+  - source devtools/travis-ci/before_install.sh
+  - python -V
 
 install:
   - sudo apt-get install npm
   - sudo npm install
-  - conda create -n qca_web -c rdkit rdkit
+  - conda create -n qca_web -c rdkit rdkit python=$TRAVIS_PYTHON_VERSION
   - conda activate qca_web
   - pip install -r requirements/travis.txt
   - pip install pytest-cov codecov
