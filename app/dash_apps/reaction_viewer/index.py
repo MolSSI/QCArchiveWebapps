@@ -2,10 +2,11 @@ from dash import Dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from ..dash_base import DashAppBase
 from ... import cache
 from .connection import get_client
+from dash.exceptions import PreventUpdate
 
 
 def list_collections():
@@ -238,3 +239,25 @@ class ReactionViewerApp(DashAppBase):
             cache.set(key, ds)
 
             return fig
+
+        @dashapp.callback(
+            [Output("rds-stoich", "options"), Output("rds-stoich", "value")],
+            [Input("available-rds", "value")],
+            [State("rds-stoich", "value")],
+        )
+        def toggle_counterpoise(dataset, current_stoich):
+            ds = get_collection(dataset)
+
+            if "cp" in ds.valid_stoich():
+                return (
+                    [
+                        {"label": "CP", "value": "cp"},
+                        {"label": "noCP", "value": "default"},
+                    ],
+                    current_stoich,
+                )
+            else:
+                return (
+                    [{"label": "N/A", "value": "default", "disabled": True},],
+                    "default",
+                )
