@@ -13,7 +13,6 @@ services:
     restart: unless-stopped
     environment:
       - MONGO_URI=mongodb://doaa:doaapass@mongo_service:27017/qca_logging_db
-      - ZENODO_TRAINING_DATA_URL=https://zenodo.org/record/3669414/files/train_test_with_header.zip
 #    volumes:
 #      - ./data/app-data:/var/www
     depends_on:
