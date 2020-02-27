@@ -43,10 +43,8 @@ class ReactionViewerApp(DashAppBase):
                 "The app is in a pre-alpha state and is for demonstration purposes only.",
                 color="warning",
             ),
-
             ### Header
             dbc.Row([dbc.Col([html.H3("Benchmark Dataset Viewer")])]),
-
             ### Main selectors
             dbc.Row(
                 [
@@ -83,7 +81,6 @@ class ReactionViewerApp(DashAppBase):
                     # multi=True,
                 ]
             ),
-
             ### Radio Options
             dbc.Row(
                 [
@@ -99,21 +96,21 @@ class ReactionViewerApp(DashAppBase):
                             #    ]
                             # ),
                             dbc.RadioItems(
-                               id="rds-groupby",
-                               options=[
-                                   {"label": "None", "value": "none"},
-                                   {"label": "Method", "value": "method"},
-                                   {"label": "Basis", "value": "basis"},
-                                   {"label": "D3", "value": "d3"},
-                               ],
-                               # className="btn-group btn-group-toggle",
-                               # inputClassName="form-check-input",
-                               # labelClassName="btn btn-primary form-check-label",
-                               # labelCheckedClassName="active",
-                               # custom=False,
-                               switch=True,
-                               value="none",
-                               # inline=True,
+                                id="rds-groupby",
+                                options=[
+                                    {"label": "None", "value": "none"},
+                                    {"label": "Method", "value": "method"},
+                                    {"label": "Basis", "value": "basis"},
+                                    {"label": "D3", "value": "d3"},
+                                ],
+                                # className="btn-group btn-group-toggle",
+                                # inputClassName="form-check-input",
+                                # labelClassName="btn btn-primary form-check-label",
+                                # labelCheckedClassName="active",
+                                # custom=False,
+                                switch=True,
+                                value="none",
+                                # inline=True,
                             ),
                         ]
                     ),
@@ -164,7 +161,6 @@ class ReactionViewerApp(DashAppBase):
                     ),
                 ]
             ),
-
             ### Primary data visualizer
             dbc.Card(
                 [
@@ -194,11 +190,12 @@ class ReactionViewerApp(DashAppBase):
         )
         def display_value(value):
             display_value = 'You have selected "{}"'.format(value)
-
+            bases = get_history_values(value, "basis")
+            bases.remove({"label": "None", "value": "None"})
             return (
                 display_value,
                 get_history_values(value, "method"),
-                get_history_values(value, "basis"),
+                bases,
             )
 
         @dashapp.callback(
@@ -230,7 +227,7 @@ class ReactionViewerApp(DashAppBase):
 
             fig = ds.visualize(
                 method=method,
-                basis=basis,
+                basis=basis + ["None"],
                 groupby=groupby,
                 metric=metric,
                 kind=kind,
