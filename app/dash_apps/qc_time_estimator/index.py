@@ -10,7 +10,7 @@ from qc_time_estimator.processing.input_utils.categorical_data import list_basis
 from qc_time_estimator.predict import make_prediction
 from qcelemental.models import DriverEnum
 import logging
-
+import natural.date
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +45,7 @@ class QCTimeEstimatorApp(DashAppBase):
 
             dbc.Row(
                 [
-                    dbc.Col([dbc.Label("Molecule (SMILES or InChI)"), required_tag()], width=3),
+                    dbc.Col([dbc.Label("Molecule (Formula, SMILES or InChI)"), required_tag()], width=3),
                     dbc.Col(
                         dcc.Input(id='molecule', type='text', size=50),
                     ),
@@ -95,8 +95,8 @@ class QCTimeEstimatorApp(DashAppBase):
                         options=[
                             {'label': 'Restricted', 'value': 'restricted'},
                         ],
-                        value=[],
-                        inputClassName='mr-2',
+                        value=['restricted'],
+                        inputClassName='mr-2'
                         ),
                     ),
                 ],
@@ -115,7 +115,7 @@ class QCTimeEstimatorApp(DashAppBase):
 
             dbc.Row(
                 [
-                    dbc.Col([dbc.Label("CPU Clock Speed (MHz):"), required_tag()], width=3),
+                    dbc.Col([dbc.Label("CPU Clock Speed (GHz):"), required_tag()], width=3),
                     dbc.Col([
                         dcc.Input(id="cpu-clock-speed",
                                   type='number',
@@ -159,7 +159,7 @@ class QCTimeEstimatorApp(DashAppBase):
                     dcc.Loading(
                         id="loading-1",
                         children=[
-                            html.P(["Extimated Execution Time: ",
+                            html.P(["Estimated Execution Time: ",
                                     html.Span(id='wall-time')
                             ]),
                             html.P(["Model Version: ",
@@ -223,7 +223,7 @@ class QCTimeEstimatorApp(DashAppBase):
                     return ['', '', True]
             try:
                 ret = make_prediction(input_data=[data])
-                return [f"{ret['predictions'][0]:.4f}", ret['version'], False]
+                return [natural.date.compress(ret['predictions'][0]*3600), ret['version'], False]
             except Exception as err:
                 logger.error(f"Error in make_prediction.\n{err}")
                 return ['', '', True]

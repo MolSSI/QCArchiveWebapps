@@ -49,3 +49,4 @@ qcportal==0.13.*
 git+https://github.com/MolSSI/ml_models_deploy.git@master#egg=qc_time_estimator&subdirectory=models/qc_time_estimator
 rdkit
 qcelemental>=0.13.1
+natural
