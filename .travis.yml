@@ -20,7 +20,7 @@ before_install:
   - pip -V
   - ulimit -a
   # Setup python conda
-  - source devtools/travis-ci/before_install.sh
+  - source devtools/travis_before_install.sh
   - python -V
 
 install:
