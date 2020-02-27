@@ -14,7 +14,6 @@ import threading
 import logging
 import natural.date
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -24,15 +23,9 @@ def create_model():
     run_training(overwrite=False)
 
 
-# TODO: make sure it's called once, Dash makes multiple calls
-if not curr_model_exists():
-    logger.info("--- Calling create model")
-    threading.Thread(target=create_model).start()
-
-
 @cache.memoize()
 def get_basis_sets_options():
-    return [{"label": k, "value": v} for k,v in list_basis_sets()]
+    return [{"label": k, "value": v} for k, v in list_basis_sets()]
 
 
 def required_tag():
@@ -41,6 +34,16 @@ def required_tag():
 
 class QCTimeEstimatorApp(DashAppBase):
     """Create a Dash app."""
+
+    def __init__(self, *args, **kwargs):
+
+        # Run async
+        if not curr_model_exists():
+            logger.info("--- Calling create model")
+            threading.Thread(target=create_model).start()
+
+        super().__init__(*args, **kwargs)
+
 
     layout = html.Div(
         [
