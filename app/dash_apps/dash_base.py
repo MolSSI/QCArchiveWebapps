@@ -12,9 +12,9 @@ class DashAppBase(ABC):
     #     'https://codepen.io/chriddyp/pen/bWLwgP.css',
     #     'https://cdn.rawgit.com/plotly/dash-app-stylesheets/0e463810ed36927caf20372b6411690692f94819/dash-drug-discovery-demo-stylesheet.css'
     # ]
-    external_stylesheets = [dbc.themes.BOOTSTRAP]
-    external_scripts = ['/static/dist/js/includes/jquery.min.js',
-                        '/static/dist/js/main.min.js']
+    external_stylesheets = [dbc.themes.BOOTSTRAP,
+                            "/static/dist/css/hugo_styles.css"]
+    external_scripts = ["https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.2.1/iframeResizer.contentWindow.min.js"]
 
     default_layout = html.Div([
             dcc.Location(id='url', refresh=False),
@@ -32,7 +32,8 @@ class DashAppBase(ABC):
                        url_base_pathname=path,  # will set both routes and requests pathname_prefix
                        external_stylesheets=external_stylesheets,
                        external_scripts=external_scripts,
-                       assets_folder='static/dist',
+                       # don't include all js and css in all apps, only when needed
+                       # assets_folder='static/dist',
                        # routes_pathname_prefix=path,
                        # requests_pathname_prefix=path,  # for middleware dispatcher
                        suppress_callback_exceptions=True,

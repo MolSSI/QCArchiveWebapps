@@ -16,20 +16,15 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
         <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 
-    {#    {% assets 'less_all' %}#}
-    {#      <link rel="{{ EXTRA.rel }}" type="text/css" href="{{ ASSET_URL }}"/>#}
-    {#    {% endassets %}#}
-
         <!-- Bootstrap 4 -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
         <!-- Application css -->
         {% assets 'scss_hugo' %}
           <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}"/>
         {% endassets %}
-
-{#        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='myNewFile.css') }}">#}
 
     {%- endblock styles %}
     {%- endblock head %}
@@ -72,6 +67,9 @@
         {% assets "js_base" %}
             <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
+
+        <!-- iframe resizing enabled-->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.2.1/iframeResizer.contentWindow.min.js"></script>
 
         {{ moment.include_moment() }}
     {%- endblock scripts -%}
