@@ -160,7 +160,8 @@ class ReactionViewerApp(DashAppBase):
                             ),
                         ]
                     ),
-                ]
+                ],
+                className="my-3"
             ),
             ### Primary data visualizer
             dbc.Card(
@@ -174,7 +175,7 @@ class ReactionViewerApp(DashAppBase):
             )
             # dcc.Graph(id='primary-graph')
         ],
-        className="container",
+        className="container pb-4",
     )
 
     def get_layout(self, dashapp):
