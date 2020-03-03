@@ -9,6 +9,7 @@ from .connection import get_client
 from dash.exceptions import PreventUpdate
 import time
 import logging
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -172,6 +173,17 @@ class ReactionViewerApp(DashAppBase):
             # dbc.Card([dbc.CardHeader("Datset Name", id='info-dataset-name'),
             #     dbc.Row([dbc.Col(dbc.Label(id='info-dataset-tagline'))])]
             # ),
+            dbc.Row(
+            dbc.Toast(
+                [html.P(id="toast-error-message")],
+                id="toast-error",
+                header="An error occured!",
+                icon="danger",
+                dismissable=True,
+                is_open=False,
+                style={"max-width": "100%"}
+            ),
+            className="my-3"),
             ### Primary data visualizer
             dbc.Card(
                 [
@@ -213,7 +225,9 @@ class ReactionViewerApp(DashAppBase):
             )
 
         @dashapp.callback(
-            Output("primary-graph", "figure"),
+            [Output("primary-graph", "figure"),
+            Output("toast-error", "is_open"),
+            Output("toast-error-message", "children")],
             [
                 Input("available-rds", "value"),
                 Input("rds-available-methods", "value"),
@@ -226,40 +240,46 @@ class ReactionViewerApp(DashAppBase):
         )
         def build_graph(dataset, method, basis, groupby, metric, kind, stoich):
 
-            t = time.time()
-            key = f"rd_df_dataset_cache_{dataset}"
-            if cache.get(key) is not None:
-                ds = cache.get(key)
-                logger.debug(f"Pulled {dataset} from cache in {time.time() - t}s.")
-            else:
-                ds = get_collection(dataset)
-                logger.debug(f"Pulled {dataset} from remote in {time.time() - t}s.")
 
-            if (method is None) or (basis is None):
-                print("")
-                return {}
+            try:
+                t = time.time()
+                key = f"rd_df_dataset_cache_{dataset}"
+                if cache.get(key) is not None:
+                    ds = cache.get(key)
+                    logger.debug(f"Pulled {dataset} from cache in {time.time() - t}s.")
+                else:
+                    ds = get_collection(dataset)
+                    logger.debug(f"Pulled {dataset} from remote in {time.time() - t}s.")
 
-            if groupby == "none":
-                groupby = None
+                if (method is None) or (basis is None):
+                    print("")
+                    return {}, False, None
 
-            t = time.time()
-            fig = ds.visualize(
-                method=method,
-                basis=basis + ["None"],
-                groupby=groupby,
-                metric=metric,
-                kind=kind,
-                stoich=stoich,
-                return_figure=True,
-            )
-            logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
+                if groupby == "none":
+                    groupby = None
 
-            t = time.time()
+                t = time.time()
+                fig = ds.visualize(
+                    method=method,
+                    basis=basis + ["None"],
+                    groupby=groupby,
+                    metric=metric,
+                    kind=kind,
+                    stoich=stoich,
+                    return_figure=True,
+                )
+                logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
 
-            cache.set(key, ds, timeout=CACHE_TIMEOUT)
-            logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
+                t = time.time()
 
-            return fig
+                cache.set(key, ds, timeout=CACHE_TIMEOUT)
+                logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
+
+                return fig, False, None
+            except Exception as exc:
+                print(traceback.format_exc())
+                tb = "\n".join(traceback.format_exc(limit=0, chain=False).splitlines()[1:])
+                return {}, True, tb
 
         @dashapp.callback(
             [Output("rds-stoich", "options"), Output("rds-stoich", "value")],
