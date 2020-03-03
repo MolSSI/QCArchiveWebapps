@@ -173,9 +173,6 @@ class ReactionViewerApp(DashAppBase):
                 ],
                 className="my-3",
             ),
-            # dbc.Card([dbc.CardHeader("Datset Name", id='info-dataset-name'),
-            #     dbc.Row([dbc.Col(dbc.Label(id='info-dataset-tagline'))])]
-            # ),
             dbc.Row(
                 dbc.Toast(
                     [html.P(id="toast-error-message")],
@@ -191,13 +188,20 @@ class ReactionViewerApp(DashAppBase):
             ### Primary data visualizer
             dbc.Card(
                 [
+                    dbc.CardHeader(id="info-dataset-name"),
                     dcc.Loading(
                         id="loading-1",
                         children=[dcc.Graph(id="primary-graph")],
                         type="default",
                     )
                 ]
-            )
+            ),
+            # dbc.Card(
+            #     [
+            #         dbc.CardHeader("Datset Name", id="info-dataset-name"),
+            #         dbc.CardBody([dbc.Label(id="info-dataset-tagline")]),
+            #     ]
+            # ),
             # dcc.Graph(id='primary-graph')
         ],
         className="container pb-4",
@@ -212,7 +216,6 @@ class ReactionViewerApp(DashAppBase):
                 Output("rds-available-methods", "options"),
                 Output("rds-available-basis", "options"),
                 Output("info-dataset-name", "children"),
-                Output("info-dataset-tagline", "children"),
             ],
             [Input("available-rds", "value")],
         )
@@ -224,8 +227,7 @@ class ReactionViewerApp(DashAppBase):
             return (
                 get_history_values(value, "method"),
                 bases,
-                ds.data.name,
-                "Tagline: " + ds.data.tagline,
+                f"{ds.data.name}: {ds.data.tagline}",
             )
 
         @dashapp.callback(
@@ -273,6 +275,7 @@ class ReactionViewerApp(DashAppBase):
                     stoich=stoich,
                     return_figure=True,
                 )
+                fig.update_layout(title_text=None, margin={"t": 25, "b": 25})
                 logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
 
                 t = time.time()
