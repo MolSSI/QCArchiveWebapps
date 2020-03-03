@@ -15,6 +15,15 @@ import sys
 import click
 # from flask_migrate import Migrate, upgrade
 from app import create_app, db
+import logging.config
+import yaml
+
+# IMPORTANT to set level to NONSET
+logging.basicConfig(level=logging.NOTSET)
+with open('logging_config.yml', 'r') as file:
+    logging.config.dictConfig(yaml.full_load(file))
+
+logger = logging.getLogger(__name__)
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 # migrate = Migrate(app, db)
