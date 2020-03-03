@@ -105,7 +105,7 @@ def _get_qcarchive_collections():
         res = client._automodel_request("collection", "get", payload, full_return=False)
         results.extend(res)
 
-    print('Total: ', len(results))
+    logger.debug('Total collections fetched: ', len(results))
 
     data = []
     for r in results:

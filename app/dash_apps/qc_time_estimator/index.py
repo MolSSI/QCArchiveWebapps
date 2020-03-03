@@ -39,7 +39,7 @@ class QCTimeEstimatorApp(DashAppBase):
 
         # Run async
         if not current_model_exists():
-            logger.info("--- Calling create model")
+            logger.info("Model doesn't exist yet, Calling create model thread...")
             threading.Thread(target=create_model).start()
 
         super().__init__(*args, **kwargs)
