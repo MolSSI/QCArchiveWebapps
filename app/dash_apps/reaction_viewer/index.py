@@ -7,7 +7,13 @@ from ..dash_base import DashAppBase
 from ... import cache
 from .connection import get_client
 from dash.exceptions import PreventUpdate
+import time
+import logging
 
+logger = logging.getLogger(__name__)
+
+SHOW_TIME = False
+CACHE_TIMEOUT = 3600 * 24 * 60 # Two months, effectively no timeout
 
 def list_collections():
     client = get_client()
@@ -16,7 +22,7 @@ def list_collections():
     return [{"label": k, "value": k} for k in names]
 
 
-@cache.memoize()
+@cache.memoize(timeout=CACHE_TIMEOUT)
 def get_collection(name):
     client = get_client()
     ds = client.get_collection("reactiondataset", name)
@@ -163,6 +169,9 @@ class ReactionViewerApp(DashAppBase):
                 ],
                 className="my-3"
             ),
+            # dbc.Card([dbc.CardHeader("Datset Name", id='info-dataset-name'),
+            #     dbc.Row([dbc.Col(dbc.Label(id='info-dataset-tagline'))])]
+            # ),
             ### Primary data visualizer
             dbc.Card(
                 [
@@ -184,20 +193,23 @@ class ReactionViewerApp(DashAppBase):
     def register_callbacks(self, dashapp):
         @dashapp.callback(
             [
-                Output("rds-display-value", "children"),
                 Output("rds-available-methods", "options"),
                 Output("rds-available-basis", "options"),
+                Output("info-dataset-name", "children"),
+                Output("info-dataset-tagline", "children"),
             ],
             [Input("available-rds", "value")],
         )
         def display_value(value):
-            display_value = 'You have selected "{}"'.format(value)
+            ds = get_collection(value)
+
             bases = get_history_values(value, "basis")
             bases.remove({"label": "None", "value": "None"})
             return (
-                display_value,
                 get_history_values(value, "method"),
                 bases,
+                ds.data.name,
+                "Tagline: " + ds.data.tagline,
             )
 
         @dashapp.callback(
@@ -214,11 +226,14 @@ class ReactionViewerApp(DashAppBase):
         )
         def build_graph(dataset, method, basis, groupby, metric, kind, stoich):
 
+            t = time.time()
             key = f"rd_df_dataset_cache_{dataset}"
             if cache.get(key) is not None:
                 ds = cache.get(key)
+                logger.debug(f"Pulled {dataset} from cache in {time.time() - t}s.")
             else:
                 ds = get_collection(dataset)
+                logger.debug(f"Pulled {dataset} from remote in {time.time() - t}s.")
 
             if (method is None) or (basis is None):
                 print("")
@@ -227,6 +242,7 @@ class ReactionViewerApp(DashAppBase):
             if groupby == "none":
                 groupby = None
 
+            t = time.time()
             fig = ds.visualize(
                 method=method,
                 basis=basis + ["None"],
@@ -236,8 +252,12 @@ class ReactionViewerApp(DashAppBase):
                 stoich=stoich,
                 return_figure=True,
             )
+            logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
 
-            cache.set(key, ds)
+            t = time.time()
+
+            cache.set(key, ds, timeout=CACHE_TIMEOUT)
+            logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
 
             return fig
 
