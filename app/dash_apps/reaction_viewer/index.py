@@ -11,6 +11,7 @@ from dash.exceptions import PreventUpdate
 
 from ... import cache
 from ..dash_base import DashAppBase
+from ...models import save_access
 from .connection import get_client
 
 logger = logging.getLogger(__name__)
@@ -188,12 +189,12 @@ class ReactionViewerApp(DashAppBase):
             ### Primary data visualizer
             dbc.Card(
                 [
-                    dbc.CardHeader(id="info-dataset-name"),
+                    dbc.CardHeader(id="info-dataset-name", style={"background": "rgba(0,126,255,.08)"}),
                     dcc.Loading(
                         id="loading-1",
                         children=[dcc.Graph(id="primary-graph")],
                         type="default",
-                    )
+                    ),
                 ]
             ),
             # dbc.Card(
@@ -224,6 +225,13 @@ class ReactionViewerApp(DashAppBase):
 
             bases = get_history_values(value, "basis")
             bases.remove({"label": "None", "value": "None"})
+
+            save_access(
+                page="reaction_datasets",
+                access_type="dataset_query",
+                dataset_name=value,
+            )
+
             return (
                 get_history_values(value, "method"),
                 bases,
@@ -282,6 +290,18 @@ class ReactionViewerApp(DashAppBase):
 
                 cache.set(key, ds, timeout=CACHE_TIMEOUT)
                 logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
+
+                save_access(
+                    page="reaction_datasets",
+                    access_type="graph_query",
+                    dataset_name=dataset,
+                    method=method,
+                    basis=basis,
+                    groupby=groupby,
+                    metric=metric,
+                    kind=kind,
+                    stoich=stoich,
+                )
 
                 return fig, False, None
             except Exception as exc:
