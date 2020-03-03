@@ -52,7 +52,7 @@ class ReactionViewerApp(DashAppBase):
     layout = html.Div(
         [
             dbc.Alert(
-                "The app is in a pre-alpha state and is for demonstration purposes only.",
+                "The app is in a alpha state and may contain incorrect results.",
                 color="warning",
             ),
             ### Header
@@ -197,13 +197,6 @@ class ReactionViewerApp(DashAppBase):
                     ),
                 ]
             ),
-            # dbc.Card(
-            #     [
-            #         dbc.CardHeader("Datset Name", id="info-dataset-name"),
-            #         dbc.CardBody([dbc.Label(id="info-dataset-tagline")]),
-            #     ]
-            # ),
-            # dcc.Graph(id='primary-graph')
         ],
         className="container pb-4",
     )
