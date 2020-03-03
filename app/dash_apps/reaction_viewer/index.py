@@ -1,20 +1,23 @@
-from dash import Dash
-import dash_core_components as dcc
-import dash_bootstrap_components as dbc
-import dash_html_components as html
-from dash.dependencies import Input, Output, State
-from ..dash_base import DashAppBase
-from ... import cache
-from .connection import get_client
-from dash.exceptions import PreventUpdate
-import time
 import logging
+import time
 import traceback
+
+import dash_bootstrap_components as dbc
+import dash_core_components as dcc
+import dash_html_components as html
+from dash import Dash
+from dash.dependencies import Input, Output, State
+from dash.exceptions import PreventUpdate
+
+from ... import cache
+from ..dash_base import DashAppBase
+from .connection import get_client
 
 logger = logging.getLogger(__name__)
 
 SHOW_TIME = False
-CACHE_TIMEOUT = 3600 * 24 * 60 # Two months, effectively no timeout
+CACHE_TIMEOUT = 3600 * 24 * 60  # Two months, effectively no timeout
+
 
 def list_collections():
     client = get_client()
@@ -168,22 +171,23 @@ class ReactionViewerApp(DashAppBase):
                         ]
                     ),
                 ],
-                className="my-3"
+                className="my-3",
             ),
             # dbc.Card([dbc.CardHeader("Datset Name", id='info-dataset-name'),
             #     dbc.Row([dbc.Col(dbc.Label(id='info-dataset-tagline'))])]
             # ),
             dbc.Row(
-            dbc.Toast(
-                [html.P(id="toast-error-message")],
-                id="toast-error",
-                header="An error occured!",
-                icon="danger",
-                dismissable=True,
-                is_open=False,
-                style={"max-width": "100%"}
+                dbc.Toast(
+                    [html.P(id="toast-error-message")],
+                    id="toast-error",
+                    header="An error occured!",
+                    icon="danger",
+                    dismissable=True,
+                    is_open=False,
+                    style={"max-width": "100%"},
+                ),
+                className="my-3",
             ),
-            className="my-3"),
             ### Primary data visualizer
             dbc.Card(
                 [
@@ -225,9 +229,11 @@ class ReactionViewerApp(DashAppBase):
             )
 
         @dashapp.callback(
-            [Output("primary-graph", "figure"),
-            Output("toast-error", "is_open"),
-            Output("toast-error-message", "children")],
+            [
+                Output("primary-graph", "figure"),
+                Output("toast-error", "is_open"),
+                Output("toast-error-message", "children"),
+            ],
             [
                 Input("available-rds", "value"),
                 Input("rds-available-methods", "value"),
@@ -239,7 +245,6 @@ class ReactionViewerApp(DashAppBase):
             ],
         )
         def build_graph(dataset, method, basis, groupby, metric, kind, stoich):
-
 
             try:
                 t = time.time()
@@ -278,7 +283,9 @@ class ReactionViewerApp(DashAppBase):
                 return fig, False, None
             except Exception as exc:
                 print(traceback.format_exc())
-                tb = "\n".join(traceback.format_exc(limit=0, chain=False).splitlines()[1:])
+                tb = "\n".join(
+                    traceback.format_exc(limit=0, chain=False).splitlines()[1:]
+                )
                 return {}, True, tb
 
         @dashapp.callback(
@@ -299,6 +306,6 @@ class ReactionViewerApp(DashAppBase):
                 )
             else:
                 return (
-                    [{"label": "N/A", "value": "default", "disabled": True},],
+                    [{"label": "N/A", "value": "default", "disabled": True}],
                     "default",
                 )
