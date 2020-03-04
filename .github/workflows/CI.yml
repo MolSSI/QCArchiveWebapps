@@ -1,0 +1,66 @@
+name: CI
+
+#on: [push, pull_request]
+on:
+  push:
+    branches-ignore:
+      - '**'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Setup Information
+      shell: bash
+      run: |
+        uname -a
+        df -h
+        ulimit -a
+        conda --version
+
+    - name: Create Environment
+      shell: bash
+      run: |
+        sudo apt-get install npm
+        sudo npm install
+        eval "$(conda shell.bash hook)" && conda activate
+        conda create -n test python=3.7 rdkit mongodb -c conda-forge
+
+    - name: Install
+      shell: bash
+      run: |
+        eval "$(conda shell.bash hook)" && conda activate test
+        pip install -r requirements/travis.txt
+        pip install pytest-cov codecov
+
+    - name: MongoDB Check
+      shell: bash
+      run: |
+        eval "$(conda shell.bash hook)" && conda activate test
+        sudo systemctl start mongod
+        sleep 5
+        mongo test_qca_db --eval ';'
+
+    - name: Environment Information
+      shell: bash
+      run: |
+        eval "$(conda shell.bash hook)" && conda activate test
+        conda list --show-channel-urls
+
+    - name: PyTest
+      shell: bash
+      run: |
+        eval "$(conda shell.bash hook)" && conda activate test
+        pytest -rws -v --cov=app/ --color=yes --duration=5
+
+    - name: CodeCov  
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
+        flags: unittests
+        yml: ./.codecov.yml 
