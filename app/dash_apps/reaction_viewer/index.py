@@ -268,6 +268,7 @@ class ReactionViewerApp(DashAppBase):
                 Output("rds-available-basis", "options"),
                 Output("info-dataset-name", "children"),
                 Output("available-molecules", "options"),
+                Output("available-molecules", "value"),
             ],
             [Input("available-rds", "value")],
         )
@@ -289,6 +290,7 @@ class ReactionViewerApp(DashAppBase):
                 bases,
                 f"{ds.data.name}: {ds.data.tagline}",
                 mol_index,
+                mol_index[0]["value"],
             )
 
         @dashapp.callback(
@@ -408,6 +410,7 @@ class ReactionViewerApp(DashAppBase):
                 d3moljs_data = cache.get(key)
                 if d3moljs_data is None:
                     ds = get_collection(dataset)
+
                     mol = ds.get_molecules(subset=molecule).iloc[0, 0]
                     d3moljs_data = molecule_to_d3moljs(mol)
                     cache.set(key, d3moljs_data, timeout=CACHE_TIMEOUT)
