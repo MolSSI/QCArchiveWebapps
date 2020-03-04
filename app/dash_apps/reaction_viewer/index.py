@@ -4,6 +4,7 @@ import traceback
 
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
+import dash_bio as dashbio
 import dash_html_components as html
 from dash import Dash
 from dash.dependencies import Input, Output, State
@@ -13,11 +14,14 @@ from ... import cache
 from ..dash_base import DashAppBase
 from ...models import save_access
 from .connection import get_client
+from ..dash_converters import molecule_to_d3moljs
 
 logger = logging.getLogger(__name__)
 
 SHOW_TIME = False
 CACHE_TIMEOUT = 3600 * 24 * 60  # Two months, effectively no timeout
+
+CARD_HEADER_STYLE = {"background": "rgba(0,126,255,.08)"}
 
 
 def list_collections():
@@ -189,11 +193,52 @@ class ReactionViewerApp(DashAppBase):
             ### Primary data visualizer
             dbc.Card(
                 [
-                    dbc.CardHeader(id="info-dataset-name", style={"background": "rgba(0,126,255,.08)"}),
+                    dbc.CardHeader(id="info-dataset-name", style=CARD_HEADER_STYLE),
                     dcc.Loading(
                         id="loading-1",
                         children=[dcc.Graph(id="primary-graph")],
                         type="default",
+                        style={"height": "450px"},
+                    ),
+                ]
+            ),
+            ### Molecule Explorer
+            dbc.Card(
+                [
+                    dbc.CardHeader("Molecule Explorer", style=CARD_HEADER_STYLE),
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [
+                                    dcc.Dropdown(
+                                        id="available-molecules",
+                                        options=[],
+                                        multi=False,
+                                    )
+                                ]
+                            )
+                        ]
+                    ),
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [
+                                    dcc.Loading(
+                                        id="loading-2",
+                                        children=[
+                                            dashbio.Molecule3dViewer(
+                                                id="dash-bio-3d",
+                                                styles={},
+                                                modelData={"atoms": [], "bonds": []},
+                                            )
+                                        ],
+                                        type="default",
+                                        style={"height": "500px"}
+                                        # styles=styles_data, modelData=model_data)
+                                    )
+                                ]
+                            )
+                        ]
                     ),
                 ]
             ),
@@ -210,6 +255,7 @@ class ReactionViewerApp(DashAppBase):
                 Output("rds-available-methods", "options"),
                 Output("rds-available-basis", "options"),
                 Output("info-dataset-name", "children"),
+                Output("available-molecules", "options"),
             ],
             [Input("available-rds", "value")],
         )
@@ -224,11 +270,14 @@ class ReactionViewerApp(DashAppBase):
                 access_type="dataset_query",
                 dataset_name=value,
             )
+            print(ds.get_index())
+            mol_index = [{"label": x, "value": x} for x in ds.get_index()]
 
             return (
                 get_history_values(value, "method"),
                 bases,
                 f"{ds.data.name}: {ds.data.tagline}",
+                mol_index,
             )
 
         @dashapp.callback(
@@ -325,3 +374,23 @@ class ReactionViewerApp(DashAppBase):
                     [{"label": "N/A", "value": "default", "disabled": True}],
                     "default",
                 )
+
+        @dashapp.callback(
+            [Output("dash-bio-3d", "modelData"), Output("dash-bio-3d", "styles")],
+            [Input("available-molecules", "value")],
+            [State("available-rds", "value")],
+        )
+        def show_molecule(molecule, dataset):
+            ds = get_collection(dataset)
+
+            style_data = {}
+            model_data = {"atoms": [], "bonds": []}
+
+            if molecule is None:
+                return model_data, style_data
+
+            mol = ds.get_molecules(subset=molecule).iloc[0, 0]
+
+            model_data, style_data = molecule_to_d3moljs(mol)
+
+            return model_data, style_data
