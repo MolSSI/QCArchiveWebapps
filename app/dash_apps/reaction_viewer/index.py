@@ -1,20 +1,22 @@
 import logging
 import time
 import traceback
+from contextlib import contextmanager
 
-import dash_bootstrap_components as dbc
-import dash_core_components as dcc
 import dash_bio as dashbio
+import dash_core_components as dcc
 import dash_html_components as html
 from dash import Dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
+import dash_bootstrap_components as dbc
+
 from ... import cache
-from ..dash_base import DashAppBase
 from ...models import save_access
-from .connection import get_client
+from ..dash_base import DashAppBase
 from ..dash_converters import molecule_to_d3moljs
+from .connection import get_client
 
 logger = logging.getLogger(__name__)
 
@@ -32,14 +34,40 @@ def list_collections():
 
 
 @cache.memoize(timeout=CACHE_TIMEOUT)
-def get_collection_metadata(name):
+def get_collection_metadata(dataset):
     """This is the function to use if you don't want ds.df.
     Since the return only has metadata, no `ds.df` will be returned.
     """
     client = get_client()
-    ds = client.get_collection_metadata("reactiondataset", name)
+    ds = client.get_collection("reactiondataset", dataset)
 
     return ds
+
+
+@contextmanager
+def collection_df_manager(dataset):
+    t = time.time()
+    key = f"rd_df_dataset_cache_{dataset}"
+
+    # Specialized caching code to be used when the ds.df is needed
+    if cache.get(key) is not None:
+        ds = cache.get(key)
+        logger.debug(f"Pulled {dataset} from cache in {time.time() - t}s.")
+    else:
+        ds = get_collection_metadata(dataset)
+        logger.debug(f"Pulled {dataset} from remote in {time.time() - t}s.")
+
+    current_cols = set(ds.df.columns)
+
+    yield ds
+
+    # Save this back if columns are updated from ds.visualize
+    if set(ds.df.columns) != current_cols:
+        t = time.time()
+        cache.set(key, ds, timeout=CACHE_TIMEOUT)
+        logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
+    else:
+        logger.debug(f"{dataset} did not change, no cache update required.")
 
 
 def get_history_values(name, category):
@@ -296,53 +324,37 @@ class ReactionViewerApp(DashAppBase):
                 print("")
                 return {}, False, None
 
+            save_access(
+                page="reaction_datasets",
+                access_type="graph_query",
+                dataset_name=dataset,
+                method=method,
+                basis=basis,
+                groupby=groupby,
+                metric=metric,
+                kind=kind,
+                stoich=stoich,
+            )
+
             try:
-                t = time.time()
-                key = f"rd_df_dataset_cache_{dataset}"
 
-                # Specialized caching code to be used when the ds.df is needed
-                if cache.get(key) is not None:
-                    ds = cache.get(key)
-                    logger.debug(f"Pulled {dataset} from cache in {time.time() - t}s.")
-                else:
-                    ds = get_collection_metadata(dataset)
-                    logger.debug(f"Pulled {dataset} from remote in {time.time() - t}s.")
+                with collection_df_manager(dataset) as ds:
 
-                current_cols = set(ds.df.columns)
+                    if groupby == "none":
+                        groupby = None
 
-                if groupby == "none":
-                    groupby = None
-
-                t = time.time()
-                fig = ds.visualize(
-                    method=method,
-                    basis=basis + ["None"],
-                    groupby=groupby,
-                    metric=metric,
-                    kind=kind,
-                    stoich=stoich,
-                    return_figure=True,
-                )
-                fig.update_layout(title_text=None, margin={"t": 25, "b": 25})
-                logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
-
-                # Save this back if columns are updated from ds.visualize
-                if set(ds.df.columns) != current_cols:
                     t = time.time()
-                    cache.set(key, ds, timeout=CACHE_TIMEOUT)
-                    logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
-
-                save_access(
-                    page="reaction_datasets",
-                    access_type="graph_query",
-                    dataset_name=dataset,
-                    method=method,
-                    basis=basis,
-                    groupby=groupby,
-                    metric=metric,
-                    kind=kind,
-                    stoich=stoich,
-                )
+                    fig = ds.visualize(
+                        method=method,
+                        basis=basis + ["None"],
+                        groupby=groupby,
+                        metric=metric,
+                        kind=kind,
+                        stoich=stoich,
+                        return_figure=True,
+                    )
+                    fig.update_layout(title_text=None, margin={"t": 25, "b": 25})
+                    logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
 
                 return fig, False, None
             except Exception as exc:
