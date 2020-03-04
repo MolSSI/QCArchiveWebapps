@@ -4,6 +4,7 @@ import traceback
 
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
+import dash_bio as dashbio
 import dash_html_components as html
 from dash import Dash
 from dash.dependencies import Input, Output, State
@@ -13,11 +14,14 @@ from ... import cache
 from ..dash_base import DashAppBase
 from ...models import save_access
 from .connection import get_client
+from ..dash_converters import molecule_to_d3moljs
 
 logger = logging.getLogger(__name__)
 
 SHOW_TIME = False
 CACHE_TIMEOUT = 3600 * 24 * 60  # Two months, effectively no timeout
+
+CARD_HEADER_STYLE = {"background": "rgba(0,126,255,.08)"}
 
 
 def list_collections():
@@ -28,16 +32,19 @@ def list_collections():
 
 
 @cache.memoize(timeout=CACHE_TIMEOUT)
-def get_collection(name):
+def get_collection_metadata(name):
+    """This is the function to use if you don't want ds.df.
+    Since the return only has metadata, no `ds.df` will be returned.
+    """
     client = get_client()
-    ds = client.get_collection("reactiondataset", name)
+    ds = client.get_collection_metadata("reactiondataset", name)
 
     return ds
 
 
 def get_history_values(name, category):
 
-    ds = get_collection(name)
+    ds = get_collection_metadata(name)
 
     methods = ds.list_values(native=True).reset_index()[category].unique()
     if category == "method":
@@ -174,26 +181,53 @@ class ReactionViewerApp(DashAppBase):
                 ],
                 className="my-3",
             ),
-            dbc.Row(
-                dbc.Toast(
-                    [html.P(id="toast-error-message")],
-                    id="toast-error",
-                    header="An error occured!",
-                    icon="danger",
-                    dismissable=True,
-                    is_open=False,
-                    style={"max-width": "100%"},
-                ),
-                className="my-3",
-            ),
             ### Primary data visualizer
             dbc.Card(
                 [
-                    dbc.CardHeader(id="info-dataset-name", style={"background": "rgba(0,126,255,.08)"}),
+                    dbc.CardHeader(id="info-dataset-name", style=CARD_HEADER_STYLE),
+                    dbc.Toast(
+                        [html.P(id="graph-toast-error-message")],
+                        id="graph-toast-error",
+                        header="An error occured!",
+                        icon="danger",
+                        dismissable=True,
+                        is_open=False,
+                        style={"max-width": "100%"},
+                    ),
                     dcc.Loading(
                         id="loading-1",
                         children=[dcc.Graph(id="primary-graph")],
                         type="default",
+                        style={"height": "450px"},
+                    ),
+                ]
+            ),
+            ### Molecule Explorer
+            dbc.Card(
+                [
+                    dbc.CardHeader("Molecule Explorer", style=CARD_HEADER_STYLE),
+                    dcc.Dropdown(id="available-molecules", options=[], multi=False),
+                    dbc.Toast(
+                        [html.P(id="molecule-toast-error-message")],
+                        id="molecule-toast-error",
+                        header="An error occured!",
+                        icon="danger",
+                        dismissable=True,
+                        is_open=False,
+                        style={"max-width": "100%"},
+                    ),
+                    dcc.Loading(
+                        id="loading-2",
+                        children=[
+                            dashbio.Molecule3dViewer(
+                                id="dash-bio-3d",
+                                styles={},
+                                modelData={"atoms": [], "bonds": []},
+                            )
+                        ],
+                        type="default",
+                        style={"height": "500px"}
+                        # styles=styles_data, modelData=model_data)
                     ),
                 ]
             ),
@@ -210,32 +244,40 @@ class ReactionViewerApp(DashAppBase):
                 Output("rds-available-methods", "options"),
                 Output("rds-available-basis", "options"),
                 Output("info-dataset-name", "children"),
+                Output("available-molecules", "options"),
+                Output("available-molecules", "value"),
             ],
             [Input("available-rds", "value")],
         )
         def display_value(value):
-            ds = get_collection(value)
+            ds = get_collection_metadata(value)
 
             bases = get_history_values(value, "basis")
-            bases.remove({"label": "None", "value": "None"})
+            try:
+                bases.remove({"label": "None", "value": "None"})
+            except:
+                pass
 
             save_access(
                 page="reaction_datasets",
                 access_type="dataset_query",
                 dataset_name=value,
             )
+            mol_index = [{"label": x, "value": x} for x in ds.get_index()]
 
             return (
                 get_history_values(value, "method"),
                 bases,
                 f"{ds.data.name}: {ds.data.tagline}",
+                mol_index,
+                mol_index[0]["value"],
             )
 
         @dashapp.callback(
             [
                 Output("primary-graph", "figure"),
-                Output("toast-error", "is_open"),
-                Output("toast-error-message", "children"),
+                Output("graph-toast-error", "is_open"),
+                Output("graph-toast-error-message", "children"),
             ],
             [
                 Input("available-rds", "value"),
@@ -247,21 +289,26 @@ class ReactionViewerApp(DashAppBase):
                 Input("rds-stoich", "value"),
             ],
         )
-        def build_graph(dataset, method, basis, groupby, metric, kind, stoich):
+        def show_graph(dataset, method, basis, groupby, metric, kind, stoich):
+
+            # Incomplete data, nothing to return
+            if (method is None) or (basis is None):
+                print("")
+                return {}, False, None
 
             try:
                 t = time.time()
                 key = f"rd_df_dataset_cache_{dataset}"
+
+                # Specialized caching code to be used when the ds.df is needed
                 if cache.get(key) is not None:
                     ds = cache.get(key)
                     logger.debug(f"Pulled {dataset} from cache in {time.time() - t}s.")
                 else:
-                    ds = get_collection(dataset)
+                    ds = get_collection_metadata(dataset)
                     logger.debug(f"Pulled {dataset} from remote in {time.time() - t}s.")
 
-                if (method is None) or (basis is None):
-                    print("")
-                    return {}, False, None
+                current_cols = set(ds.df.columns)
 
                 if groupby == "none":
                     groupby = None
@@ -279,10 +326,11 @@ class ReactionViewerApp(DashAppBase):
                 fig.update_layout(title_text=None, margin={"t": 25, "b": 25})
                 logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
 
-                t = time.time()
-
-                cache.set(key, ds, timeout=CACHE_TIMEOUT)
-                logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
+                # Save this back if columns are updated from ds.visualize
+                if set(ds.df.columns) != current_cols:
+                    t = time.time()
+                    cache.set(key, ds, timeout=CACHE_TIMEOUT)
+                    logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
 
                 save_access(
                     page="reaction_datasets",
@@ -310,7 +358,7 @@ class ReactionViewerApp(DashAppBase):
             [State("rds-stoich", "value")],
         )
         def toggle_counterpoise(dataset, current_stoich):
-            ds = get_collection(dataset)
+            ds = get_collection_metadata(dataset)
 
             if "cp" in ds.valid_stoich():
                 return (
@@ -325,3 +373,39 @@ class ReactionViewerApp(DashAppBase):
                     [{"label": "N/A", "value": "default", "disabled": True}],
                     "default",
                 )
+
+        @dashapp.callback(
+            [
+                Output("dash-bio-3d", "modelData"),
+                Output("dash-bio-3d", "styles"),
+                Output("molecule-toast-error", "is_open"),
+                Output("molecule-toast-error-message", "children"),
+            ],
+            [Input("available-molecules", "value")],
+            [State("available-rds", "value")],
+        )
+        def show_molecule(molecule, dataset):
+
+            blank_return = ({"atoms": [], "bonds": []}, {})
+
+            if molecule is None:
+                return blank_return + (False, None)
+
+            try:
+                key = f"rd_df_molecule_cache_{dataset}_{molecule}"
+                d3moljs_data = cache.get(key)
+                if d3moljs_data is None:
+                    ds = get_collection_metadata(dataset)
+
+                    mol = ds.get_molecules(subset=molecule).iloc[0, 0]
+                    d3moljs_data = molecule_to_d3moljs(mol)
+                    cache.set(key, d3moljs_data, timeout=CACHE_TIMEOUT)
+
+                model_data, style_data = d3moljs_data
+                return model_data, style_data, False, None
+            except:
+                print(traceback.format_exc())
+                tb = "\n".join(
+                    traceback.format_exc(limit=0, chain=False).splitlines()[1:]
+                )
+                return blank_return + (True, tb)
