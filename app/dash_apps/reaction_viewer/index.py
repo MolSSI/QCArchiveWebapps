@@ -1,5 +1,6 @@
 import logging
 import time
+from textwrap import dedent
 import traceback
 from contextlib import contextmanager
 
@@ -259,8 +260,17 @@ class ReactionViewerApp(DashAppBase):
                     ),
                 ]
             ),
+            dbc.Row(),
+            ### Info
+            dbc.Card(
+                [
+                    dbc.CardHeader("Database Information", style=CARD_HEADER_STYLE),
+                    dbc.ListGroup(id="dataset-information", flush=True,),
+                ]
+            ),
         ],
         className="container pb-4",
+        style={"padding": 10},
     )
 
     def get_layout(self, dashapp):
@@ -274,6 +284,7 @@ class ReactionViewerApp(DashAppBase):
                 Output("info-dataset-name", "children"),
                 Output("available-molecules", "options"),
                 Output("available-molecules", "value"),
+                Output("dataset-information", "children"),
             ],
             [Input("available-rds", "value")],
         )
@@ -285,6 +296,49 @@ class ReactionViewerApp(DashAppBase):
                 bases.remove({"label": "None", "value": "None"})
             except:
                 pass
+
+            try:
+                citation = ds.data.metadata["citations"][0]["acs_citation"]
+                citation = citation.replace("</em>", "*").replace(
+                    "<em>", "*"
+                )  # Italics 1
+                citation = citation.replace("</i>", "*").replace(
+                    "<i>", "*"
+                )  # Italics 2
+                citation = citation.replace("</b>", "**").replace("<b>", "**")  # Bold
+                citation = citation.replace(", ***", "*, **").replace(
+                    "***, ", "**, *"
+                )  # HTML vs Markdown corrections
+                doi = ds.data.metadata["citations"][0]["doi"]
+
+                citation = dedent(
+                    f"""
+                        ### Citation:
+                        {citation}
+
+                        **DOI**: [{doi}](https://doi.org/{doi})
+                        """
+                )
+            except:
+                citation = dedent(
+                    f"""
+                    ## Citation:
+                    *No information available.*
+                    """
+                )
+
+            mqcas_help = dedent(
+                """
+                We are still filling in data and expanding these Webapps.
+                If you have features suggestions or bug reports please file them [here](https://github.com/MolSSI/QCArchiveWebapps/issues/new/choose)
+                or if you wish to expand the datasets, methods, or bases please open an issue
+                [here](https://github.com/MolSSI/MQCAS/issues/new/choose).
+                """
+            )
+
+            dataset_info = [
+                dbc.ListGroupItem(dcc.Markdown(x)) for x in [citation, mqcas_help]
+            ]
 
             save_access(
                 page="reaction_datasets",
@@ -299,6 +353,7 @@ class ReactionViewerApp(DashAppBase):
                 f"{ds.data.name}: {ds.data.tagline}",
                 mol_index,
                 mol_index[0]["value"],
+                dataset_info,
             )
 
         @dashapp.callback(
