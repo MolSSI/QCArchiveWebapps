@@ -178,10 +178,11 @@ class ReactionViewerApp(DashAppBase):
                 ],
                 className="my-3",
             ),
+            ### Primary data visualizer
             dbc.Row(
                 dbc.Toast(
-                    [html.P(id="toast-error-message")],
-                    id="toast-error",
+                    [html.P(id="graph-toast-error-message")],
+                    id="graph-toast-error",
                     header="An error occured!",
                     icon="danger",
                     dismissable=True,
@@ -190,7 +191,6 @@ class ReactionViewerApp(DashAppBase):
                 ),
                 className="my-3",
             ),
-            ### Primary data visualizer
             dbc.Card(
                 [
                     dbc.CardHeader(id="info-dataset-name", style=CARD_HEADER_STYLE),
@@ -203,6 +203,18 @@ class ReactionViewerApp(DashAppBase):
                 ]
             ),
             ### Molecule Explorer
+            dbc.Row(
+                dbc.Toast(
+                    [html.P(id="molecule-toast-error-message")],
+                    id="molecule-toast-error",
+                    header="An error occured!",
+                    icon="danger",
+                    dismissable=True,
+                    is_open=False,
+                    style={"max-width": "100%"},
+                ),
+                className="my-3",
+            ),
             dbc.Card(
                 [
                     dbc.CardHeader("Molecule Explorer", style=CARD_HEADER_STYLE),
@@ -283,7 +295,7 @@ class ReactionViewerApp(DashAppBase):
             [
                 Output("primary-graph", "figure"),
                 Output("toast-error", "is_open"),
-                Output("toast-error-message", "children"),
+                Output("graph-toast-error-message", "children"),
             ],
             [
                 Input("available-rds", "value"),
@@ -295,7 +307,7 @@ class ReactionViewerApp(DashAppBase):
                 Input("rds-stoich", "value"),
             ],
         )
-        def build_graph(dataset, method, basis, groupby, metric, kind, stoich):
+        def show_graph(dataset, method, basis, groupby, metric, kind, stoich):
 
             try:
                 t = time.time()
@@ -375,22 +387,36 @@ class ReactionViewerApp(DashAppBase):
                 )
 
         @dashapp.callback(
-            [Output("dash-bio-3d", "modelData"), Output("dash-bio-3d", "styles")],
+            [
+                Output("dash-bio-3d", "modelData"),
+                Output("dash-bio-3d", "styles"),
+                Output("molecule-toast-error", "is_open"),
+                Output("molecule-toast-error-message", "children"),
+            ],
             [Input("available-molecules", "value")],
             [State("available-rds", "value")],
         )
         def show_molecule(molecule, dataset):
-            ds = get_collection(dataset)
+
+            blank_return = ({"atoms": [], "bonds": []}, {})
 
             if molecule is None:
-                return {"atoms": [], "bonds": []}, {}
+                return blank_return + (False, None)
 
-            key = f"rd_df_molecule_cache_{dataset}_{molecule}"
-            d3moljs_data = cache.get(key)
-            if d3moljs_data is None:
-                mol = ds.get_molecules(subset=molecule).iloc[0, 0]
-                d3moljs_data = molecule_to_d3moljs(mol)
-                cache.set(key, d3moljs_data, timeout=CACHE_TIMEOUT)
+            try:
+                key = f"rd_df_molecule_cache_{dataset}_{molecule}"
+                d3moljs_data = cache.get(key)
+                if d3moljs_data is None:
+                    ds = get_collection(dataset)
+                    mol = ds.get_molecules(subset=molecule).iloc[0, 0]
+                    d3moljs_data = molecule_to_d3moljs(mol)
+                    cache.set(key, d3moljs_data, timeout=CACHE_TIMEOUT)
 
-            model_data, style_data = d3moljs_data
-            return model_data, style_data
+                model_data, style_data = d3moljs_data
+                return model_data, style_data, False, None
+            except:
+                print(traceback.format_exc())
+                tb = "\n".join(
+                    traceback.format_exc(limit=0, chain=False).splitlines()[1:]
+                )
+                return blank_return + (True, tb)
