@@ -1,6 +1,10 @@
 name: CI
 
-on: [push, pull_request]
+#on: [push, pull_request]
+on:
+  push:
+    branches-ignore:
+      - '**'
 
 jobs:
   build:
@@ -30,7 +34,6 @@ jobs:
       shell: bash
       run: |
         eval "$(conda shell.bash hook)" && conda activate test
-        source activate test
         pip install -r requirements/travis.txt
         pip install pytest-cov codecov
 
