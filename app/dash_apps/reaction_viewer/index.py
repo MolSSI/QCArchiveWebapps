@@ -270,7 +270,6 @@ class ReactionViewerApp(DashAppBase):
                 access_type="dataset_query",
                 dataset_name=value,
             )
-            print(ds.get_index())
             mol_index = [{"label": x, "value": x} for x in ds.get_index()]
 
             return (
