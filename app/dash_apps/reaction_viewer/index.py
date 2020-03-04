@@ -32,16 +32,19 @@ def list_collections():
 
 
 @cache.memoize(timeout=CACHE_TIMEOUT)
-def get_collection(name):
+def get_collection_metadata(name):
+    """This is the function to use if you don't want ds.df.
+    Since the return only has metadata, no `ds.df` will be returned.
+    """
     client = get_client()
-    ds = client.get_collection("reactiondataset", name)
+    ds = client.get_collection_metadata("reactiondataset", name)
 
     return ds
 
 
 def get_history_values(name, category):
 
-    ds = get_collection(name)
+    ds = get_collection_metadata(name)
 
     methods = ds.list_values(native=True).reset_index()[category].unique()
     if category == "method":
@@ -247,7 +250,7 @@ class ReactionViewerApp(DashAppBase):
             [Input("available-rds", "value")],
         )
         def display_value(value):
-            ds = get_collection(value)
+            ds = get_collection_metadata(value)
 
             bases = get_history_values(value, "basis")
             try:
@@ -288,19 +291,24 @@ class ReactionViewerApp(DashAppBase):
         )
         def show_graph(dataset, method, basis, groupby, metric, kind, stoich):
 
+            # Incomplete data, nothing to return
+            if (method is None) or (basis is None):
+                print("")
+                return {}, False, None
+
             try:
                 t = time.time()
                 key = f"rd_df_dataset_cache_{dataset}"
+
+                # Specialized caching code to be used when the ds.df is needed
                 if cache.get(key) is not None:
                     ds = cache.get(key)
                     logger.debug(f"Pulled {dataset} from cache in {time.time() - t}s.")
                 else:
-                    ds = get_collection(dataset)
+                    ds = get_collection_metadata(dataset)
                     logger.debug(f"Pulled {dataset} from remote in {time.time() - t}s.")
 
-                if (method is None) or (basis is None):
-                    print("")
-                    return {}, False, None
+                current_cols = set(ds.df.columns)
 
                 if groupby == "none":
                     groupby = None
@@ -318,10 +326,11 @@ class ReactionViewerApp(DashAppBase):
                 fig.update_layout(title_text=None, margin={"t": 25, "b": 25})
                 logger.debug(f"Built {dataset} graph in {time.time() - t}s.")
 
-                t = time.time()
-
-                cache.set(key, ds, timeout=CACHE_TIMEOUT)
-                logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
+                # Save this back if columns are updated from ds.visualize
+                if set(ds.df.columns) != current_cols:
+                    t = time.time()
+                    cache.set(key, ds, timeout=CACHE_TIMEOUT)
+                    logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
 
                 save_access(
                     page="reaction_datasets",
@@ -349,7 +358,7 @@ class ReactionViewerApp(DashAppBase):
             [State("rds-stoich", "value")],
         )
         def toggle_counterpoise(dataset, current_stoich):
-            ds = get_collection(dataset)
+            ds = get_collection_metadata(dataset)
 
             if "cp" in ds.valid_stoich():
                 return (
@@ -386,7 +395,7 @@ class ReactionViewerApp(DashAppBase):
                 key = f"rd_df_molecule_cache_{dataset}_{molecule}"
                 d3moljs_data = cache.get(key)
                 if d3moljs_data is None:
-                    ds = get_collection(dataset)
+                    ds = get_collection_metadata(dataset)
 
                     mol = ds.get_molecules(subset=molecule).iloc[0, 0]
                     d3moljs_data = molecule_to_d3moljs(mol)
