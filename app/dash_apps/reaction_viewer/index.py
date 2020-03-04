@@ -179,21 +179,18 @@ class ReactionViewerApp(DashAppBase):
                 className="my-3",
             ),
             ### Primary data visualizer
-            dbc.Row(
-                dbc.Toast(
-                    [html.P(id="graph-toast-error-message")],
-                    id="graph-toast-error",
-                    header="An error occured!",
-                    icon="danger",
-                    dismissable=True,
-                    is_open=False,
-                    style={"max-width": "100%"},
-                ),
-                className="my-3",
-            ),
             dbc.Card(
                 [
                     dbc.CardHeader(id="info-dataset-name", style=CARD_HEADER_STYLE),
+                    dbc.Toast(
+                        [html.P(id="graph-toast-error-message")],
+                        id="graph-toast-error",
+                        header="An error occured!",
+                        icon="danger",
+                        dismissable=True,
+                        is_open=False,
+                        style={"max-width": "100%"},
+                    ),
                     dcc.Loading(
                         id="loading-1",
                         children=[dcc.Graph(id="primary-graph")],
@@ -203,54 +200,31 @@ class ReactionViewerApp(DashAppBase):
                 ]
             ),
             ### Molecule Explorer
-            dbc.Row(
-                dbc.Toast(
-                    [html.P(id="molecule-toast-error-message")],
-                    id="molecule-toast-error",
-                    header="An error occured!",
-                    icon="danger",
-                    dismissable=True,
-                    is_open=False,
-                    style={"max-width": "100%"},
-                ),
-                className="my-3",
-            ),
             dbc.Card(
                 [
                     dbc.CardHeader("Molecule Explorer", style=CARD_HEADER_STYLE),
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [
-                                    dcc.Dropdown(
-                                        id="available-molecules",
-                                        options=[],
-                                        multi=False,
-                                    )
-                                ]
-                            )
-                        ]
+                    dcc.Dropdown(id="available-molecules", options=[], multi=False),
+                    dbc.Toast(
+                        [html.P(id="molecule-toast-error-message")],
+                        id="molecule-toast-error",
+                        header="An error occured!",
+                        icon="danger",
+                        dismissable=True,
+                        is_open=False,
+                        style={"max-width": "100%"},
                     ),
-                    dbc.Row(
-                        [
-                            dbc.Col(
-                                [
-                                    dcc.Loading(
-                                        id="loading-2",
-                                        children=[
-                                            dashbio.Molecule3dViewer(
-                                                id="dash-bio-3d",
-                                                styles={},
-                                                modelData={"atoms": [], "bonds": []},
-                                            )
-                                        ],
-                                        type="default",
-                                        style={"height": "500px"}
-                                        # styles=styles_data, modelData=model_data)
-                                    )
-                                ]
+                    dcc.Loading(
+                        id="loading-2",
+                        children=[
+                            dashbio.Molecule3dViewer(
+                                id="dash-bio-3d",
+                                styles={},
+                                modelData={"atoms": [], "bonds": []},
                             )
-                        ]
+                        ],
+                        type="default",
+                        style={"height": "500px"}
+                        # styles=styles_data, modelData=model_data)
                     ),
                 ]
             ),
@@ -276,7 +250,10 @@ class ReactionViewerApp(DashAppBase):
             ds = get_collection(value)
 
             bases = get_history_values(value, "basis")
-            bases.remove({"label": "None", "value": "None"})
+            try:
+                bases.remove({"label": "None", "value": "None"})
+            except:
+                pass
 
             save_access(
                 page="reaction_datasets",
@@ -296,7 +273,7 @@ class ReactionViewerApp(DashAppBase):
         @dashapp.callback(
             [
                 Output("primary-graph", "figure"),
-                Output("toast-error", "is_open"),
+                Output("graph-toast-error", "is_open"),
                 Output("graph-toast-error-message", "children"),
             ],
             [
