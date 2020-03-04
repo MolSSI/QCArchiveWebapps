@@ -383,14 +383,15 @@ class ReactionViewerApp(DashAppBase):
         def show_molecule(molecule, dataset):
             ds = get_collection(dataset)
 
-            style_data = {}
-            model_data = {"atoms": [], "bonds": []}
-
             if molecule is None:
-                return model_data, style_data
+                return {"atoms": [], "bonds": []}, {}
 
-            mol = ds.get_molecules(subset=molecule).iloc[0, 0]
+            key = f"rd_df_molecule_cache_{dataset}_{molecule}"
+            d3moljs_data = cache.get(key)
+            if d3moljs_data is None:
+                mol = ds.get_molecules(subset=molecule).iloc[0, 0]
+                d3moljs_data = molecule_to_d3moljs(mol)
+                cache.set(key, d3moljs_data, timeout=CACHE_TIMEOUT)
 
-            model_data, style_data = molecule_to_d3moljs(mol)
-
+            model_data, style_data = d3moljs_data
             return model_data, style_data
