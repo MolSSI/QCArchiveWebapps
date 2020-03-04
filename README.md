@@ -9,6 +9,8 @@ This repository serves the Webapps on the [QCArchive](https://qcarchive.molssi.o
 Pull requests are welcome for bug fixes or small features!
 If interested, please reach out to us on Slack or an Issue here before starting a new web application.
 
+**Note:** This repository is built to be a QCArchive end product and is not suitable as a library or for replicating.
+
 How to run and use for development:
 ===================================
 
