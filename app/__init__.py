@@ -9,7 +9,9 @@ from flask_caching import Cache
 from flask_cors import CORS
 from flask_mongoengine import MongoEngine
 from flask_admin import Admin
+import logging
 
+logger = logging.getLogger(__name__)
 
 db = MongoEngine()
 app_admin = Admin(name='QCArchive Logging Admin', template_mode='bootstrap3',
@@ -26,8 +28,9 @@ cors = CORS()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 
-
 def create_app(config_name):
+    logger.info(f"logger: Creating flask app with config {config_name}")
+
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
@@ -48,6 +51,7 @@ def create_app(config_name):
 
     with app.app_context():
 
+        logger.debug("Adding blueprints..")
         # The main application entry
         from .main import main as main_blueprint
         app.register_blueprint(main_blueprint)
@@ -72,9 +76,11 @@ def create_app(config_name):
         app_admin.init_app(app)
 
         # Register dash apps
+        logger.debug("Adding Dash apps..")
         register_dashapps(flask_server=app)
 
         # Compile assets (JS, SCSS, less)
+        logger.debug('Creating assets..')
         from .assets import compile_assets
         compile_assets(app)
 

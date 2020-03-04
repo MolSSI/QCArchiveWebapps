@@ -15,8 +15,8 @@ services:
       # set by a .env file (add to production)
       - MONGO_URI=$MONGO_URI
 #      - MONGO_URI=mongodb://doaa:doaapass@mongo_service:27017/qca_logging_db
-#    volumes:
-#      - ./data/app-data:/var/www
+    volumes:
+      - ./data/app-data:/var/www/logs
     depends_on:
       - mongo_service
     networks:
