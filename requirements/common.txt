@@ -39,6 +39,7 @@ Werkzeug
 WTForms
 dash
 dash-bootstrap-components
+dash-bio
 pandas
 Flask-Caching
 Flask-Cors
