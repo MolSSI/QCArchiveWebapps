@@ -57,3 +57,4 @@ node_modules/
 package-lock.json
 data/
 *.log
+logs/qcarchive_webapps.log
