@@ -131,7 +131,7 @@ class QCTimeEstimatorApp(DashAppBase):
             dbc.Row(
                 [
                     dbc.Col([dbc.Label("Number of threads:")], width=3),
-                    dbc.Col([dcc.Input(id="threads", value=1, size=25),]),
+                    dbc.Col([dcc.Input(id="nthreads", value=1, size=25),]),
                 ],
                 className="mb-2",
             ),
@@ -234,7 +234,7 @@ class QCTimeEstimatorApp(DashAppBase):
                 State("basis-set", "value"),
                 State("driver", "value"),
                 State("restricted", "value"),
-                State("threads", "value"),
+                State("nthreads", "value"),
                 State("cpu-clock-speed", "value"),
                 State("cpu-launch-year", "value"),
             ],
@@ -246,7 +246,7 @@ class QCTimeEstimatorApp(DashAppBase):
             basis_set,
             driver,
             restricted,
-            threads,
+            nthreads,
             cpu_clock_speed,
             cpu_launch_year,
         ):
@@ -260,7 +260,7 @@ class QCTimeEstimatorApp(DashAppBase):
                 basis_set=basis_set,
                 driver=driver,
                 restricted=True if "restricted" in restricted else False,
-                threads=threads if threads else 1,
+                nthreads=nthreads if nthreads else 1,
                 cpu_clock_speed=cpu_clock_speed * 1000 if cpu_clock_speed else None,
                 cpu_launch_year=cpu_launch_year,
             )
@@ -277,7 +277,7 @@ class QCTimeEstimatorApp(DashAppBase):
             try:
                 ret = make_prediction(input_data=[data])
                 return [
-                    natural.date.compress(ret["predictions"][0] * 3600),
+                    f'{natural.date.compress(ret["predictions"][0] * 3600)} ({ret["predictions"][0] * 3600:.4f})',
                     ret["version"],
                     False,
                 ]
