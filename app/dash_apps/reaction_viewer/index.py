@@ -229,7 +229,8 @@ class ReactionViewerApp(DashAppBase):
                         type="default",
                         style={"height": "450px"},
                     ),
-                ]
+                ],
+                className="mb-3",
             ),
             ### Molecule Explorer
             dbc.Card(
@@ -258,9 +259,9 @@ class ReactionViewerApp(DashAppBase):
                         style={"height": "500px"}
                         # styles=styles_data, modelData=model_data)
                     ),
-                ]
+                ],
+                className="mb-3",
             ),
-            dbc.Row(),
             ### Info
             dbc.Card(
                 [
@@ -269,8 +270,7 @@ class ReactionViewerApp(DashAppBase):
                 ]
             ),
         ],
-        className="container pb-4",
-        style={"padding": 10},
+        className="container py-3",
     )
 
     def get_layout(self, dashapp):
