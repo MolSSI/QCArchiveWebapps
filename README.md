@@ -93,6 +93,10 @@ To run the website locally, use:
 flask run
 ```
 
+For a bug with Flask, Keras, and Tensorflow, don't run with reload
+```bash
+flask run --no-reload --without-threads
+```
 
 ## More resources:
 
