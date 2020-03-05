@@ -236,7 +236,7 @@ class ReactionViewerApp(DashAppBase):
             dbc.Card(
                 [
                     dbc.CardHeader("Molecule Explorer", style=CARD_HEADER_STYLE),
-                    dcc.Dropdown(id="available-molecules", options=[], multi=False),
+                    dcc.Dropdown(id="available-molecules", options=[], multi=False, className='p-2'),
                     dbc.Toast(
                         [html.P(id="molecule-toast-error-message")],
                         id="molecule-toast-error",
