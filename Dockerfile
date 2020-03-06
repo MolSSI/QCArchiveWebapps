@@ -45,7 +45,7 @@ EXPOSE 5000
 # Run in Exec form, can't be overriden
 ENTRYPOINT [ "gunicorn", "--bind", "0.0.0.0:5000", "qcarchive_web:app"]
 # Params to pass to ENTRYPOINT, and can be overriden when running containers
-CMD ["-w", "4", "--access-logfile", "access.log", "--error-logfile", "error.log"]
+CMD ["-w", "2", "--access-logfile", "access.log", "--error-logfile", "error.log"]
 
 # can't override ENTRYPOINT shell form
 #ENTRYPOINT gunicorn --bind :5000 --access-logfile - --error-logfile - qcarchive_web:app
