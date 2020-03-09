@@ -1,4 +1,4 @@
 #!/bin/sh
 
-certbot --nginx
+certbot --nginx --non-interactive --agree-tos -m qcarchive@molssi.org
 nginx -g "daemon off;"
