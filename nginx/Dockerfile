@@ -11,6 +11,7 @@ RUN apk --update add nginx && \
     rm -rf /var/cache/apk/*
 
 COPY conf.d/app.conf /etc/nginx/conf.d/app.conf
+COPY boot.sh boot.sh
 
 EXPOSE 443
 
@@ -20,4 +21,4 @@ RUN apk add --no-cache certbot certbot-nginx && \
 RUN apk add --no-cache openrc busybox-initscripts && \
     rc-update add crond
 
-CMD ["certbot", "--nginx;", "nginx", "-g", "daemon off;"]
+CMD "./boot.sh"
