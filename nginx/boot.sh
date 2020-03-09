@@ -1,4 +1,4 @@
 #!/bin/sh
 
 certbot --nginx
-nginx -g daemon off;
+nginx -g "daemon off;"
