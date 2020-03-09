@@ -1,4 +1,4 @@
 #!/bin/sh
 
-certbot --nginx --non-interactive --agree-tos -m qcarchive@molssi.org
-nginx -g "daemon off;"
+nginx
+certbot --nginx --non-interactive --agree-tos -m qcarchive@molssi.org -d qcarchive-webapps.eastus.cloudapp.azure.com

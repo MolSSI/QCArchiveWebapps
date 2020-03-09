@@ -14,7 +14,7 @@ COPY conf.d/app.conf /etc/nginx/conf.d/app.conf
 COPY boot.sh boot.sh
 RUN chmod +x boot.sh
 
-EXPOSE 443
+EXPOSE 80 443
 
 RUN apk add --no-cache certbot certbot-nginx && \
     echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q" | tee -a /etc/crontab > /dev/null
