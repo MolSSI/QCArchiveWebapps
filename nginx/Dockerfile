@@ -17,6 +17,6 @@ EXPOSE 443
 RUN apk add --no-cache certbot certbot-nginx && \
     echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q" | tee -a /etc/crontab > /dev/null
 
-RUN rc-update add crond
+RUN apk add --no-cache openrc && rc-update add crond
 
 CMD ["certbot", "--nginx;", "nginx", "-g", "daemon off;"]
