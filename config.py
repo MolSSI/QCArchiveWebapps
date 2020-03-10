@@ -7,7 +7,7 @@ class Config:
     # Flask-Caching configs
     # In dev, default to use memory cache
     CACHE_TYPE = os.environ.get('CACHE_TYPE') or 'simple'
-    CACHE_DEFAULT_TIMEOUT = 3600 * 24 * 60  # Two months, effectively no timeout
+    CACHE_DEFAULT_TIMEOUT = 60 * 60 * 24  # in seconds, one day
 
     # If redis is used, set URL
     CACHE_REDIS_URL =  os.environ.get('CACHE_REDIS_URL') or 'redis://localhost:6379/0'

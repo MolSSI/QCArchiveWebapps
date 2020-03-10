@@ -22,6 +22,7 @@ from .connection import get_client
 logger = logging.getLogger(__name__)
 
 SHOW_TIME = False
+CACHE_TIMEOUT = 3600 * 24 * 60  # Two months, effectively no timeout
 
 CARD_HEADER_STYLE = {"background": "rgba(0,126,255,.08)"}
 
@@ -33,7 +34,7 @@ def list_collections():
     return [{"label": k, "value": k} for k in names]
 
 
-@cache.memoize()
+@cache.memoize(timeout=CACHE_TIMEOUT)
 def get_collection_metadata(dataset):
     """This is the function to use if you don't want ds.df.
     Since the return only has metadata, no `ds.df` will be returned.
@@ -64,7 +65,7 @@ def collection_df_manager(dataset):
     # Save this back if columns are updated from ds.visualize
     if set(ds.df.columns) != current_cols:
         t = time.time()
-        cache.set(key, ds)
+        cache.set(key, ds, timeout=CACHE_TIMEOUT)
         logger.debug(f"Set {dataset} cache in {time.time() - t}s.")
     else:
         logger.debug(f"{dataset} did not change, no cache update required.")
@@ -465,7 +466,7 @@ class ReactionViewerApp(DashAppBase):
 
                     mol = ds.get_molecules(subset=molecule).iloc[0, 0]
                     d3moljs_data = molecule_to_d3moljs(mol)
-                    cache.set(key, d3moljs_data)
+                    cache.set(key, d3moljs_data, timeout=CACHE_TIMEOUT)
 
                 model_data, style_data = d3moljs_data
                 return model_data, style_data, False, None
