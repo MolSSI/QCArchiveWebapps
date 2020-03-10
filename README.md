@@ -98,6 +98,32 @@ For a bug with Flask, Keras, and Tensorflow, don't run with reload
 flask run --no-reload --without-threads
 ```
 
+### To try Redis caching locallyin dev, run Redis before running the Flask app:
+
+```bash
+export CACHE_TYPE=redis
+chmod +x ./devtools/run-redis.sh
+./devtools/run-redis.sh
+```
+
+You can view the content of the redis cache using Redis viewers such as 
+Redis Desktop Manager (free for Linux).
+
+### Docker:
+
+Run docker-compose directly, or set any desired environment variables by creating 
+a `.env` file which will be read automatically by docker-compose.
+
+```bash
+# create the host volume folder with non-root access
+mkdir data
+chown -R myUser:myUse data
+# clean unused docker images and containers
+./dockerclean.sh
+# build and run containers
+docker-compose up --build 
+```
+
 ## More resources:
 
 1. For Docker deployment config example, check this
