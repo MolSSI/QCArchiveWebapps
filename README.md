@@ -98,7 +98,7 @@ For a bug with Flask, Keras, and Tensorflow, don't run with reload
 flask run --no-reload --without-threads
 ```
 
-### To try Redis caching locallyin dev, run Redis before running the Flask app:
+### To try Redis caching localliny dev, run Redis before running the Flask app:
 
 ```bash
 export CACHE_TYPE=redis
@@ -106,7 +106,7 @@ chmod +x ./devtools/run-redis.sh
 ./devtools/run-redis.sh
 ```
 
-You can view the content of the redis cache using Redis viewers such as 
+You can view the content of the Redis cache using Redis viewers such as 
 Redis Desktop Manager (free for Linux).
 
 ### Docker:
