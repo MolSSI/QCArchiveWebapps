@@ -22,7 +22,7 @@ bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 pagedown = PageDown()
-cache = Cache(config={'CACHE_TYPE': 'simple'})
+cache = Cache()
 cors = CORS()
 
 login_manager = LoginManager()
@@ -34,6 +34,7 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
+    logger.info(f'Using Cache Type: {app.config["CACHE_TYPE"]}')
 
     bootstrap.init_app(app)
     mail.init_app(app)

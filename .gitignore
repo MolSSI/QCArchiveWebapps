@@ -49,6 +49,8 @@ venv
 #Pycharm
 .idea/
 
+redis-stable/
+
 # Front-end
 .webassets-cache/
 

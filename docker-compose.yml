@@ -13,14 +13,27 @@ services:
     restart: unless-stopped
     environment:
       # set by a .env file (add to production)
+      - FLASK_CONFIG=production
       - MONGO_URI=$MONGO_URI
 #      - MONGO_URI=mongodb://doaa:doaapass@mongo_service:27017/qca_logging_db
+      - CACHE_REDIS_URL=redis://redis_service:6379/0
     volumes:
       - ./data/app-data:/var/www/logs
     depends_on:
       - mongo_service
+      - redis_service
     networks:
       - frontend
+      - backend
+
+  redis_service:
+    container_name: redis
+    image: redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 1GB
+    ports:
+      - "6379:6379"
+    networks:
       - backend
 
   mongo_service:

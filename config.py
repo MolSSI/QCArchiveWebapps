@@ -3,6 +3,15 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
+
+    # Flask-Caching configs
+    # In dev, default to use memory cache
+    CACHE_TYPE = os.environ.get('CACHE_TYPE') or 'simple'
+    CACHE_DEFAULT_TIMEOUT = 60 * 60 * 24  # in seconds, one day
+
+    # If redis is used, set URL
+    CACHE_REDIS_URL =  os.environ.get('CACHE_REDIS_URL') or 'redis://localhost:6379/0'
+
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
 
     # Mail
@@ -21,10 +30,6 @@ class Config:
 
     # TODO: define in each environment
     # QCPORTAL_URI = ''
-
-    # Flask-Caching related configs
-    CACHE_TYPE = "simple",
-    CACHE_DEFAULT_TIMEOUT =  60 * 60 * 2  # seconds
 
     # Admin login
     APP_ADMIN = os.environ.get('APP_ADMIN', 'daltarawy@vt.edu')
@@ -46,17 +51,11 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-    #     'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
-
-    CACHE_DEFAULT_TIMEOUT =  80  # seconds
 
 
 class TestingConfig(Config):
     TESTING = True
     DEBUG = False
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-    #     'sqlite://'
     WTF_CSRF_ENABLED = False
     EMAIL_CONFIRMATION_ENABLED = True
     # disable CSRF protection in testing
@@ -67,9 +66,10 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-    #     'sqlite:///' + os.path.join(basedir, 'data.sqlite')
-    pass
+
+    # Default flask-caching to redis in prod
+    CACHE_TYPE = os.environ.get('CACHE_TYPE') or 'redis'
+
 
     @classmethod
     def init_app(cls, app):
@@ -92,7 +92,7 @@ class ProductionConfig(Config):
             credentials=credentials,
             secure=secure)
         mail_handler.setLevel(logging.ERROR)
-        app.logger.addHandler(mail_handler)
+        # app.logger.addHandler(mail_handler)
 
 
 class HerokuConfig(ProductionConfig):
