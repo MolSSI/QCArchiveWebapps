@@ -11,7 +11,15 @@ RUN apk --update add nginx && \
     rm -rf /var/cache/apk/*
 
 COPY conf.d/app.conf /etc/nginx/conf.d/app.conf
+COPY boot.sh boot.sh
+RUN chmod +x boot.sh
 
 EXPOSE 80 443
-#EXPOSE 88 443
-CMD ["nginx", "-g", "daemon off;"]
+
+RUN apk add --no-cache certbot certbot-nginx && \
+    echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew -q" | tee -a /etc/crontab > /dev/null
+
+RUN apk add --no-cache openrc busybox-initscripts && \
+    rc-update add crond
+
+CMD "./boot.sh"
