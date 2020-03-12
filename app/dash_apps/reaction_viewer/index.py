@@ -236,7 +236,12 @@ class ReactionViewerApp(DashAppBase):
             dbc.Card(
                 [
                     dbc.CardHeader("Molecule Explorer", style=CARD_HEADER_STYLE),
-                    dcc.Dropdown(id="available-molecules", options=[], multi=False, className='p-2'),
+                    dcc.Dropdown(
+                        id="available-molecules",
+                        options=[],
+                        multi=False,
+                        className="p-2",
+                    ),
                     dbc.Toast(
                         [html.P(id="molecule-toast-error-message")],
                         id="molecule-toast-error",
@@ -266,7 +271,7 @@ class ReactionViewerApp(DashAppBase):
             dbc.Card(
                 [
                     dbc.CardHeader("Database Information", style=CARD_HEADER_STYLE),
-                    dbc.ListGroup(id="dataset-information", flush=True,),
+                    dbc.ListGroup(id="dataset-information", flush=True),
                 ]
             ),
         ],
@@ -298,47 +303,81 @@ class ReactionViewerApp(DashAppBase):
                 pass
 
             try:
-                citation = ds.data.metadata["citations"][0]["acs_citation"]
-                citation = citation.replace("</em>", "*").replace(
-                    "<em>", "*"
-                )  # Italics 1
-                citation = citation.replace("</i>", "*").replace(
-                    "<i>", "*"
-                )  # Italics 2
-                citation = citation.replace("</b>", "**").replace("<b>", "**")  # Bold
-                citation = citation.replace(", ***", "*, **").replace(
-                    "***, ", "**, *"
-                )  # HTML vs Markdown corrections
+                tmp = ds.data.metadata["citations"][0]["acs_citation"]
+                tmp = tmp.replace("&amp", "&")
+
+                authors, second = tmp.split("<em>")
+                emph, remaining = second.split("</em>")
+
+                bold, remaining = remaining.replace("<b>", "").split("</b>")
+                italics, remaining = remaining.replace("<i>", "").split("</i>")
+
                 doi = ds.data.metadata["citations"][0]["doi"]
-
-                citation = dedent(
-                    f"""
-                        ### Citation:
-                        {citation}
-
-                        **DOI**: [{doi}](https://doi.org/{doi})
-                        """
+                citation = html.P(
+                    [
+                        html.H5("Citation:"),
+                        html.P(
+                            [
+                                authors,
+                                html.Em(emph),
+                                html.B(bold),
+                                html.I(italics),
+                                remaining,
+                            ]
+                        ),
+                        html.P(
+                            [
+                                html.B("DOI: "),
+                                html.A(
+                                    doi, href=f"https://doi.org/{doi}", target="_blank"
+                                ),
+                            ]
+                        ),
+                    ]
                 )
-            except:
-                citation = dedent(
-                    f"""
-                    ## Citation:
-                    *No information available.*
-                    """
+                # citation = citation.replace("</em>", "*").replace(
+                #     "<em>", "*"
+                # )  # Italics 1
+                # citation = citation.replace("</i>", "*").replace(
+                #     "<i>", "*"
+                # )  # Italics 2
+                # citation = citation.replace("</b>", "**").replace("<b>", "**")  # Bold
+                # citation = citation.replace(", ***", "*, **").replace(
+                #     "***, ", "**, *"
+                # )  # HTML vs Markdown corrections
+
+            except Exception as exc:
+                logger.error(str(exc))
+                citation = html.P(
+                    [html.H5("Citation:"), html.I("No information available.")]
                 )
 
-            mqcas_help = dedent(
-                """
-                We are still filling in data and expanding these Webapps.
-                If you have features suggestions or bug reports please file them [here](https://github.com/MolSSI/QCArchiveWebapps/issues/new/choose)
-                or if you wish to expand the datasets, methods, or bases please open an issue
-                [here](https://github.com/MolSSI/MQCAS/issues/new/choose).
-                """
+                # dedent(
+                #     f"""
+                #     ## Citation:
+                #     *No information available.*
+                #     """
+                # )
+
+            mqcas_help = html.P(
+                [
+                    "We are still filling in data and expanding these Webapps. If you have features suggestions or bug reports please file them ",
+                    html.A(
+                        "here",
+                        href="https://github.com/MolSSI/QCArchiveWebapps/issues/new/choose",
+                        target="_blank",
+                    ),
+                    " or if you wish to expand the datasets, methods, or bases please open an issue ",
+                    html.A(
+                        "here",
+                        href="https://github.com/MolSSI/MQCAS/issues/new/choose",
+                        target="_blank",
+                    ),
+                    ".",
+                ]
             )
 
-            dataset_info = [
-                dbc.ListGroupItem(dcc.Markdown(x)) for x in [citation, mqcas_help]
-            ]
+            dataset_info = [dbc.ListGroupItem(x) for x in [citation, mqcas_help]]
 
             save_access(
                 page="reaction_datasets",
