@@ -88,7 +88,7 @@ class ReactionViewerApp(DashAppBase):
     layout = html.Div(
         [
             dbc.Alert(
-                "The app is in a alpha state and may contain incorrect results.",
+                "The app is in an alpha state and may contain incorrect results.",
                 color="warning",
             ),
             ### Header
