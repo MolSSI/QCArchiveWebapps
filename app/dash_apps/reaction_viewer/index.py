@@ -229,6 +229,7 @@ class ReactionViewerApp(DashAppBase):
                         type="default",
                         style={"height": "450px"},
                     ),
+                    dbc.Label(children="Benchmark:", id="graph-benchmark-label"),
                 ],
                 className="mb-3",
             ),
@@ -290,6 +291,7 @@ class ReactionViewerApp(DashAppBase):
                 Output("available-molecules", "options"),
                 Output("available-molecules", "value"),
                 Output("dataset-information", "children"),
+                Output("graph-benchmark-label", "children"),
             ],
             [Input("available-rds", "value")],
         )
@@ -386,6 +388,9 @@ class ReactionViewerApp(DashAppBase):
             )
             mol_index = [{"label": x, "value": x} for x in ds.get_index()]
 
+            benchmark_info = ds.data.contributed_values[
+                ds.data.default_benchmark.lower()
+            ].theory_level
             return (
                 get_history_values(value, "method"),
                 bases,
@@ -393,6 +398,7 @@ class ReactionViewerApp(DashAppBase):
                 mol_index,
                 mol_index[0]["value"],
                 dataset_info,
+                f"Benchmark: {benchmark_info}",
             )
 
         @dashapp.callback(
