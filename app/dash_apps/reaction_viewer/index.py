@@ -122,7 +122,7 @@ class ReactionViewerApp(DashAppBase):
             ),
             dbc.Row(
                 [
-                    dbc.Col([dbc.Label("Select bases to display:")], width=3),
+                    dbc.Col([dbc.Label("Select basis sets to display:")], width=3),
                     dbc.Col(
                         [dcc.Dropdown(id="rds-available-basis", options=[], multi=True)]
                     ),
