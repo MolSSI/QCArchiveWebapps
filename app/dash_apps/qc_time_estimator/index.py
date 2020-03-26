@@ -131,7 +131,14 @@ class QCTimeEstimatorApp(DashAppBase):
             dbc.Row(
                 [
                     dbc.Col([dbc.Label("Number of threads:")], width=3),
-                    dbc.Col([dcc.Input(id="nthreads", value=1, size=25),]),
+                    dbc.Col([dcc.Input(id="nthreads",
+                                       value=1,
+                                        type="number",
+                                        min=1,
+                                        max=32,
+                                        step=1,
+                                       size=25
+                                       ),]),
                 ],
                 className="mb-2",
             ),
