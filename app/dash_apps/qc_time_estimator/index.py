@@ -279,6 +279,9 @@ class QCTimeEstimatorApp(DashAppBase):
             logger.info(f"Running prediction for input: {data}")
 
             for k, v in data.items():
+                # skip boolean variables
+                if k == 'restricted':
+                    continue
                 if not v:
                     return ["", "", True, f"{REQUIRED_MSG} ({k})"]
 
