@@ -16,6 +16,9 @@ import natural.date
 
 logger = logging.getLogger(__name__)
 
+# Error msgs
+REQUIRED_MSG = "Please enter required fields with valid values"
+
 
 def create_model():
     # Create the model only if doesn't exist
@@ -55,7 +58,7 @@ class QCTimeEstimatorApp(DashAppBase):
                 [dbc.Col([html.H3("QC Execution Time Estimator")])], className="mb-5"
             ),
             dbc.Alert(
-                "Please enter required fields with valid values.",
+                REQUIRED_MSG,
                 id="error-msg",
                 color="danger",
                 is_open=False,
@@ -133,10 +136,10 @@ class QCTimeEstimatorApp(DashAppBase):
                     dbc.Col([dbc.Label("Number of threads:")], width=3),
                     dbc.Col([dcc.Input(id="nthreads",
                                        value=1,
-                                        type="number",
-                                        min=1,
-                                        max=32,
-                                        step=1,
+                                       type="number",
+                                       min=1,
+                                       max=32,
+                                       step=1,
                                        size=25
                                        ),]),
                 ],
@@ -152,12 +155,12 @@ class QCTimeEstimatorApp(DashAppBase):
                             dcc.Input(
                                 id="cpu-clock-speed",
                                 type="number",
-                                min=0.5,
-                                max=7,
+                                min=1,
+                                max=4,
                                 step=0.1,
                                 value=2.2,
                                 size=25,  # TODO: Does not work!!
-                                # required=True
+                                required=True
                             )
                             # options=[{"label": f'{k/1000} GHz', "value": k} for k in range(500, 7500, 500)]),
                         ],
@@ -233,6 +236,7 @@ class QCTimeEstimatorApp(DashAppBase):
                 Output("wall-time", "children"),
                 Output("model-version", "children"),
                 Output("error-msg", "is_open"),
+                Output("error-msg", "children"),
             ],
             [Input("submit", "n_clicks")],
             [
@@ -259,7 +263,7 @@ class QCTimeEstimatorApp(DashAppBase):
         ):
 
             if not n_clicks:
-                return ["", "", False]
+                return ["", "", False, ""]
 
             data = dict(
                 molecule=molecule,
@@ -267,7 +271,7 @@ class QCTimeEstimatorApp(DashAppBase):
                 basis_set=basis_set,
                 driver=driver,
                 restricted=True if "restricted" in restricted else False,
-                nthreads=nthreads if nthreads else 1,
+                nthreads=nthreads,
                 cpu_clock_speed=cpu_clock_speed * 1000 if cpu_clock_speed else None,
                 cpu_launch_year=cpu_launch_year,
             )
@@ -275,8 +279,8 @@ class QCTimeEstimatorApp(DashAppBase):
             logger.info(f"Running prediction for input: {data}")
 
             for k, v in data.items():
-                if v is None:
-                    return ["", "", True]
+                if not v:
+                    return ["", "", True, f"{REQUIRED_MSG} ({k})"]
 
             if not current_model_exists():
                 return ["(running model training, please try again later)", "", False]
@@ -286,8 +290,8 @@ class QCTimeEstimatorApp(DashAppBase):
                 return [
                     f'{natural.date.compress(ret["predictions"][0] * 3600)} ({ret["predictions"][0] * 3600:.4f})',
                     ret["version"],
-                    False,
+                    False, "",
                 ]
             except Exception as err:
                 logger.error(f"Error in make_prediction.\n{err}")
-                return ["", "", True]
+                return ["", "", True, str(err)]
