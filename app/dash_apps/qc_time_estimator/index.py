@@ -109,7 +109,7 @@ class QCTimeEstimatorApp(DashAppBase):
                         [
                             dcc.Dropdown(
                                 id="driver",
-                                options=[{"label": k, "value": k} for k in DriverEnum],
+                                options=[{"label": k, "value": k} for k in DriverEnum if k != "properties"],
                                 value="energy",
                             ),
                         ]
