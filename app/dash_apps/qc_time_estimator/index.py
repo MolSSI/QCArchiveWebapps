@@ -286,7 +286,7 @@ class QCTimeEstimatorApp(DashAppBase):
                     return ["", "", True, f"{REQUIRED_MSG} ({k})"]
 
             if not current_model_exists():
-                return ["(running model training, please try again later)", "", False]
+                return ["(running model training, please try again later)", "", False, ""]
 
             try:
                 ret = make_prediction(input_data=[data])
