@@ -121,6 +121,15 @@ function format_elements(data, type, row, meta, full){
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+$(document).ready( function () {
+
+    $.ajax({
+        url: '/static/jmol_colors.json',
+        async: false,
+        timeout: 1000,  // msec
+    }).done(function (data) {
+        window.jmol_colors = data;
+    });
 
 
     console.log('Creating datatable');
