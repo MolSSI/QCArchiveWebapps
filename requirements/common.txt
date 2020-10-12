@@ -15,6 +15,7 @@ Flask-PageDown
 # Flask-SQLAlchemy
 Flask-WTF
 Flask_Assets
+email_validator
 html5lib
 cssmin
 lesscpy
@@ -46,8 +47,8 @@ Flask-Cors
 Flask_Mongoengine
 Flask_Admin
 geoip2
-git+https://github.com/MolSSI/qcportal.git@master#egg=qcportal
-git+https://github.com/MolSSI/ml_models_deploy.git@GBR_model#egg=qc_time_estimator&subdirectory=models/qc_time_estimator
+qcportal @ git+https://github.com/MolSSI/qcportal.git@master#egg=qcportal
+qc_time_estimator @ git+https://github.com/doaa-altarawy/ml_models_deploy.git@NN_model#egg=qc_time_estimator&subdirectory=models/qc_time_estimator
 qcelemental>=0.13.1
 natural
 redis

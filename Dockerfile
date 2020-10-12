@@ -28,6 +28,9 @@ RUN apt-get update && \
     pip install --no-cache-dir gunicorn  && \
     conda clean -y --all
 
+# run trainning for the ML model, to save memory later
+RUN qc-time-estimator train-model
+
 ADD . /var/www/
 
 RUN groupadd -g $GROUP_ID www  && \
