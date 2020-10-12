@@ -4,7 +4,7 @@ import setuptools
 def read_requirements():
     """parses requirements from requirements.txt"""
 
-    with open('requirements.txt') as f:
+    with open('requirements/common.txt') as f:
         req = f.readlines()
 
     return req
