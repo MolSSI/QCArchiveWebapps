@@ -52,3 +52,4 @@ qc_time_estimator @ git+https://github.com/doaa-altarawy/ml_models_deploy.git@NN
 qcelemental>=0.13.1
 natural
 redis
+dnspython
