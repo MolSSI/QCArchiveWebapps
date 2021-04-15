@@ -1,10 +1,17 @@
-name: qca_env
+name: qca_web
 channels:
   - conda-forge
   - rdkit
 dependencies:
   - python=3.7
   - pip=19.3
-#  - nodejs    # 110 MB  
+  - rdkit
+# Test depends
+  - codecov
+  - pytest
+  - pytest-cov
+  - requests-mock
   - pip:
     - -r requirements.txt
+    - -r requirements/travis.txt
+    - -r requirements/common.txt

@@ -1,66 +1,76 @@
-name: CI
+name: Continuous Integration
 
-#on: [push, pull_request]
 on:
   push:
-    branches-ignore:
-      - '**'
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+        #  schedule:
+        #    - cron: '0 0 * * *'
 
 jobs:
-  build:
-
-    runs-on: ubuntu-18.04
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7"]
+        node-version: ["14.x"]
+        mongodb-version: ["4.x"]
+        environ: [qca_web]
 
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - name: Additional info about the build
+        run: |
+          uname -a
+          free -m
+          df -h
+          pip -V
+          ulimit -a
 
-    - name: Setup Information
-      shell: bash
-      run: |
-        uname -a
-        df -h
-        ulimit -a
-        conda --version
+      - name: Configure conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          activate-environment: ${{ matrix.environ }}
+          environment-file: environment.yml
+          auto-activate-base: false
 
-    - name: Create Environment
-      shell: bash
-      run: |
-        sudo apt-get install npm
-        sudo npm install
-        eval "$(conda shell.bash hook)" && conda activate
-        conda create -n test python=3.7 rdkit mongodb -c conda-forge
+      - name: Environment Information
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
 
-    - name: Install
-      shell: bash
-      run: |
-        eval "$(conda shell.bash hook)" && conda activate test
-        pip install -r requirements/travis.txt
-        pip install pytest-cov codecov
+      - name: Setting up dependencies (Node.js)
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          check-latest: true
 
-    - name: MongoDB Check
-      shell: bash
-      run: |
-        eval "$(conda shell.bash hook)" && conda activate test
-        sudo systemctl start mongod
-        sleep 5
-        mongo test_qca_db --eval ';'
+      - name: Install Node.js 
+        run: |
+          npm install
 
-    - name: Environment Information
-      shell: bash
-      run: |
-        eval "$(conda shell.bash hook)" && conda activate test
-        conda list --show-channel-urls
+      - name: Start MongoDB v${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.3.0
 
-    - name: PyTest
-      shell: bash
-      run: |
-        eval "$(conda shell.bash hook)" && conda activate test
-        pytest -rws -v --cov=app/ --color=yes --duration=5
+      - name: Key component versions
+        shell: bash -l {0}
+        run: |
+          mongod --version
+          mongo test_qca_db --eval ';'
 
-    - name: CodeCov  
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage.xml
-        flags: unittests
-        yml: ./.codecov.yml 
+      - name: Run tests
+        shell: bash -l {0}
+        run: |
+          pytest -v -rsx --cov=app tests/ --tb=short --cov-report=xml
+
+      - name: Code coverage
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: true
