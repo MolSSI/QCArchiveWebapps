@@ -13,5 +13,3 @@ dependencies:
   - requests-mock
   - pip:
     - -r requirements.txt
-    - -r requirements/travis.txt
-    - -r requirements/common.txt
