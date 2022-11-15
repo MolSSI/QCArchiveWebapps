@@ -1,2 +1,0 @@
-FLASK_APP=qcarchive_web.py
-FLASK_ENV=development

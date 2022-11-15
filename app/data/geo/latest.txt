@@ -1,3 +1,0 @@
-Latest download date: 2019-11-12
-Download from:
-https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz

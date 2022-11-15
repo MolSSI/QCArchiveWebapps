@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "qcarchive_webapps"
+version = "0.0.1"
+authors = [
+  { name="Benjamin Pritchard", email="qcarchive@molssi.org" },
+]
+description='Public Webapps for the QCArchive project'
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "flask",
+    "flask-bootstrap",
+    "flask-cors",
+    "flask-assets",
+    "dash",
+    "dash-bootstrap-components",
+    "dash-bio",
+    "gunicorn",
+    "qcportal<0.50",
+
+    # TODO - remove?
+    "libsass",
+    "jsmin",
+    "pandas<1.5.0",
+]
+
+[tool.setuptools.package-data]
+qcarchive_webapps = ['static/**', 'templates/**']
+
+[project.urls]
+"Homepage" = "https://github.com/MolSSI/QCArchiveWebapps"
+"Bug Tracker" = "https://github.com/MolSSI/QCArchiveWebapps/issues"
+
+
+[tool.black]
+line-length = 120

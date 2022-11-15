@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}QCArchive{% endblock %}
+
+{% block page_content %}
+
+    <ul>
+    {% for app in apps %}
+      <li><a href="{{ app.link }}">{{ app.name }}</a></li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}

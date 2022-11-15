@@ -3,7 +3,6 @@ from flask import current_app
 from flask_login import current_user
 import pytest
 from base64 import b64encode
-from app.models.users import User, Permission
 
 
 auth_url = '/auth'

@@ -1,6 +1,5 @@
 import json
 from base64 import b64encode
-from app.models.users import User
 from app.models.logs import Log
 import pytest
 
