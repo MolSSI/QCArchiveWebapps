@@ -35,7 +35,12 @@ def _get_qcarchive_collections():
         if r["metadata"]:  # add metadata attributes
             r.update(r.pop("metadata"))
 
-        r["data_points"] = f'{r["data_points"]:,}'
+        # Convert to a string if it exists
+        r["data_points"] =  f'{r["data_points"]:,}' if "data_points" in r else ""
+
+        # Handle missing data
+        r["theory_level"] = r.get("theory_level", "")
+        r["sampling"] = r.get("sampling", "")
 
         if r["view_metadata"]:  # add metadata attributes
             r.update(r.pop("view_metadata"))
